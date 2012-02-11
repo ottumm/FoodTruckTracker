@@ -6,29 +6,13 @@ require 'twitter'
 require 'chronic'
 
 def main(last_tweet_id)
-  get_list_members("ottumm", "food-trucks").each do |user|
-    Twitter.user_timeline(user.screen_name, {:since_id => (last_tweet_id or 1)}).each do |tweet|
-      date = parse_date(tweet)
-      location = parse_location(tweet)
-      puts "@#{tweet.user.screen_name} (#{tweet.created_at}): #{tweet.text}"
-      puts "\tTime: #{date}"
-      puts "\tLoc:  #{location}"
-    end
+  Twitter.list_timeline("ottumm", "food-trucks", {:since_id => (last_tweet_id or 1)}).each do |user|
+    date = parse_date(tweet)
+    location = parse_location(tweet)
+    puts "@#{tweet.user.screen_name} (#{tweet.created_at}): #{tweet.text}"
+    puts "\tTime: #{date}"
+    puts "\tLoc:  #{location}"
   end
-end
-
-def get_list_members_w_cursor(account, list_name, list, cursor)
-  debugger
-  return list if cursor == 0
-
-  members = Twitter.list_members(account, list_name, {:cursor => cursor})
-  members.users.each do |u| list << u end
-  get_list_members_w_cursor(account, list_name, list, cursor)
-end
-
-def get_list_members(account, list_name)
-  list = []
-  get_list_members_w_cursor(account, list_name, list, -1)
 end
 
 def parse_date(tweet)
