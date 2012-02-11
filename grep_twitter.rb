@@ -1,14 +1,62 @@
 #!/usr/bin/ruby
 
 require 'rubygems'
-require 'twitter'
 require 'ruby-debug'
+require 'twitter'
+require 'chronic'
 
-regex = $ARGV[0]
-last_tweet_id = $ARGV[1]
-
-Twitter.list_timeline("ottumm", "food-trucks", {:since_id => (last_tweet_id or 1)}).each do |tweet|
-  if (tweet.text =~ /#{regex}/i)
-    puts "@#{tweet.user.screen_name} (#{tweet.id}): #{tweet.text}"
+def main(last_tweet_id)
+  get_list_members("ottumm", "food-trucks").each do |user|
+    Twitter.user_timeline(user.screen_name, {:since_id => (last_tweet_id or 1)}).each do |tweet|
+      date = parse_date(tweet)
+      location = parse_location(tweet)
+      puts "@#{tweet.user.screen_name} (#{tweet.created_at}): #{tweet.text}"
+      puts "\tTime: #{date}"
+      puts "\tLoc:  #{location}"
+    end
   end
 end
+
+def get_list_members_w_cursor(account, list_name, list, cursor)
+  debugger
+  return list if cursor == 0
+
+  members = Twitter.list_members(account, list_name, {:cursor => cursor})
+  members.users.each do |u| list << u end
+  get_list_members_w_cursor(account, list_name, list, cursor)
+end
+
+def get_list_members(account, list_name)
+  list = []
+  get_list_members_w_cursor(account, list_name, list, -1)
+end
+
+def parse_date(tweet)
+  get_phrases(tweet.text).each do |phrase|
+    date = Chronic.parse(phrase, {:now => tweet.created_at})
+    if (date)
+      return date
+    end
+  end
+  
+  return nil
+end
+
+def parse_location(tweet)
+  match = /\s(@|at)\s?([\w&]*\s?[\w&]*)/.match(tweet.text)
+  return match ? match[2] : nil
+end
+
+def get_phrases(text)
+  phrases = Array.new
+  words = text.split
+  words.length.downto(1) do |len|
+    0.upto(words.length - len) do |start|
+      phrases.push(words.slice(start, len).join(" "))
+    end
+  end
+  
+  return phrases
+end
+
+main($ARGV[0])
