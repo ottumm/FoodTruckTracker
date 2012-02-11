@@ -1,6 +1,7 @@
 #!/usr/bin/ruby
 
 require 'rubygems'
+require 'active_support/core_ext/numeric/time'
 require 'ruby-debug'
 require 'twitter'
 require 'chronic'
@@ -10,20 +11,20 @@ require 'date'
 def main(last_tweet_id, ical_file)
   cal = create_calendar()
 
-  get_tweets(last_tweet_id).each do |user|
-    date = parse_date(tweet)
+  get_tweets(last_tweet_id).each do |tweet|
+    time = parse_time(tweet)
     location = parse_location(tweet)
     puts "@#{tweet.user.screen_name} (#{tweet.created_at}): #{tweet.text}"
-    puts "\tTime: #{date}"
+    puts "\tTime: #{time}"
     puts "\tLoc:  #{location}"
 
-    if ( date && location )
+    if ( time && location )
       cal.event do
-        dtstart     date
-        dtend       date + 2.hours
-        summary     tweet.user.name
+        dtstart     time.to_datetime
+        dtend       (time + 2.hours).to_datetime
+        summary     "@#{tweet.user.screen_name}"
         location    location
-        description "@#{tweet.user.screen_name} (#{tweet.created_at}): #{tweet.text}"
+        description "#{tweet.created_at} - #{tweet.text}"
       end
     end
   end
@@ -36,7 +37,10 @@ def get_tweets(since_id)
 end
 
 def create_calendar
-  cal = Calendar.new
+  cal = Icalendar::Calendar.new
+  cal.custom_property("X-WR-CALNAME;VALUE=TEXT", "Twitter Food Trucks")
+  cal.custom_property("X-WR-TIMEZONE;VALUE=TEXT", "America/Los_Angeles")
+
   cal.timezone do
     timezone_id          "America/Los_Angeles"
     
@@ -60,10 +64,10 @@ def create_calendar
   return cal
 end
 
-def parse_date(tweet)
+def parse_time(tweet)
   get_all_phrases(tweet.text).each do |phrase|
-    date = Chronic.parse(phrase, {:now => tweet.created_at})
-    return date if date
+    time = Chronic.parse(phrase, {:now => tweet.created_at})
+    return time if time
   end
   
   return nil
