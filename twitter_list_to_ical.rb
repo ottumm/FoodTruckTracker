@@ -30,7 +30,7 @@ def parse_location(tweet)
 end
 
 def get_phrases(text)
-  phrases = Array.new
+  phrases = []
   words = text.split
   words.length.downto(1) do |len|
     0.upto(words.length - len) do |start|
