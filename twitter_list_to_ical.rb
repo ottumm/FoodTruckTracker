@@ -18,9 +18,7 @@ end
 def parse_date(tweet)
   get_phrases(tweet.text).each do |phrase|
     date = Chronic.parse(phrase, {:now => tweet.created_at})
-    if (date)
-      return date
-    end
+    return date if date
   end
   
   return nil
