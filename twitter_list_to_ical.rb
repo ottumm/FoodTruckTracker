@@ -7,16 +7,60 @@ require 'twitter'
 require 'chronic'
 require 'icalendar'
 require 'date'
+require 'json'
+require 'open-uri'
 
-def main(last_tweet_id, ical_file)
+def main(truck_file, ical_file, last_tweet_id, filter)
+  filtered_cal = create_calendar()
+  trucks = JSON.parse(File.open(truck_file, "r").read)
+  trucks.each do |truck|
+    twitter = truck["twitter"]
+    ical    = truck["ical"]
+
+    truck_cal = ical ? filter_ical(fetch_ical(ical), filter, twitter) : timeline_to_ical(twitter, filter, last_tweet_id)
+    filtered_cal = merge_calendars(filtered_cal, truck_cal)
+  end
+
+  File.open(ical_file, 'w') {|f| f.write(filtered_cal.to_ical)} if ( ical_file )
+end
+
+def fetch_ical(url)
+  puts "Fetching #{url}"
+  return Icalendar::parse(open(url).read).first
+end
+
+def filter_ical(cal, filter, name)
+  filtered_cal = create_calendar()
+  cal.events.each do |event|
+    puts "#{name} (ical)"
+    puts "\tTime: #{event.dtstart}"
+    puts "\tLoc : #{event.summary}"
+    if ( /#{filter}/i.match(event.summary) )
+      event.location   = event.summary
+      event.summary    = name
+      filtered_cal.add_event(event)
+    end
+  end
+
+  return filtered_cal
+end
+
+def merge_calendars(cal1, cal2)
+  merged_calendar = create_calendar()
+  cal1.events.each { |event| merged_calendar.add_event(event) }
+  cal2.events.each { |event| merged_calendar.add_event(event) }
+  return merged_calendar
+end
+
+def timeline_to_ical(account, filter, last_tweet_id)
   cal = create_calendar()
 
-  get_tweets(last_tweet_id).each do |tweet|
+  get_tweets(account, last_tweet_id).each do |tweet|
     time = parse_time(tweet)
-    location = parse_location(tweet)
+    location = parse_location(tweet, filter)
     puts "@#{tweet.user.screen_name} (#{tweet.created_at}): #{tweet.text}"
-    puts "\tTime: #{time}"
-    puts "\tLoc:  #{location}"
+    puts "\tTime: #{time}"     if time
+    puts "\tLoc : #{location}" if location
 
     if ( time && location )
       cal.event do
@@ -29,11 +73,12 @@ def main(last_tweet_id, ical_file)
     end
   end
 
-  File.open(ical_file, 'w') {|f| f.write(cal.to_ical)} if ( ical_file )
+  return cal
 end
 
-def get_tweets(since_id)
-  return Twitter.list_timeline("ottumm", "food-trucks", {:since_id => (since_id or 1)})
+def get_tweets(account, since_id)
+  puts "Fetching timeline for #{account}"
+  return Twitter.user_timeline(account, {:since_id => (since_id or 1)})
 end
 
 def create_calendar
@@ -73,9 +118,9 @@ def parse_time(tweet)
   return nil
 end
 
-def parse_location(tweet)
-  match = /\s(@|at)\s?([\w&]*\s?[\w&]*)/.match(tweet.text)
-  return match ? match[2] : nil
+def parse_location(tweet, filter)
+  match = /\s(#{filter}[\w&]*\s?[\w&]*)/i.match(tweet.text)
+  return match ? match[1] : nil
 end
 
 def get_all_phrases(text)
@@ -90,4 +135,4 @@ def get_all_phrases(text)
   return phrases
 end
 
-main($ARGV[1], $ARGV[0])
+main($ARGV[0], $ARGV[1], $ARGV[2], "hollis")
