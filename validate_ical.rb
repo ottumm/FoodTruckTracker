@@ -4,9 +4,14 @@ require 'rubygems'
 require 'nokogiri'
 require 'open-uri'
 require 'ruby-debug'
+require 'rest_client'
 
-url = ARGV[0]
-doc = Nokogiri::HTML(open("http://severinghaus.org/projects/icv/?url=#{URI.escape(url)}"))
+file = ARGV[0]
+res  = RestClient.post("http://severinghaus.org/projects/icv/",
+	:ics => File.new(file),
+	:MAX_FILE_SIZE => "1000000")
+
+doc = Nokogiri::HTML(res.body)
 errors = doc.css(".parse-error td")
 exit unless errors.length > 0
 
