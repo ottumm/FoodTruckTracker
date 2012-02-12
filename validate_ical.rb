@@ -9,11 +9,13 @@ errors = doc.css(".parse-error td")
 exit unless errors.length > 0
 
 errors.each do |error|
-	puts error.content
+	$stderr.puts error.content
 end
 
 puts
 
 doc.css(".context tr").each do |line|
-	puts "#{line.children[0].content}\t#{line.children[2].content}"
+	$stderr.puts "#{line.children[0].content}\t#{line.children[2].content}"
 end
+
+abort
