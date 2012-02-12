@@ -2,6 +2,7 @@
 
 require 'rubygems'
 require 'active_support/core_ext/numeric/time'
+require 'active_support/time'
 require 'ruby-debug'
 require 'twitter'
 require 'chronic'
@@ -36,9 +37,18 @@ def filter_ical(cal, filter, name)
     puts "\tTime: #{event.dtstart}"
     puts "\tLoc : #{event.summary}"
     if ( /#{filter}/i.match(event.summary) )
-      event.location   = event.summary
-      event.summary    = name
-      filtered_cal.add_event(event)
+      if event.created.to_time < Time.now - 10.years
+        filtered_cal.event do
+          dtstart  event.dtstart
+          dtend    event.dtend
+          summary  name
+          location event.summary
+        end
+      else
+        event.location = event.summary
+        event.summary  = name
+        filtered_cal.add_event(event)
+      end
     end
   end
 
