@@ -65,7 +65,7 @@ end
 def timeline_to_ical(account, filter, last_tweet_id)
   cal = create_calendar()
 
-  get_tweets(account, last_tweet_id).each do |tweet|
+  fetch_tweets(account, last_tweet_id).each do |tweet|
     time = parse_time(tweet)
     location = parse_location(tweet, filter)
     puts "@#{tweet.user.screen_name} (#{tweet.created_at}): #{tweet.text}"
