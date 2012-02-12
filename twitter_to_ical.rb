@@ -18,7 +18,7 @@ def main(truck_file, ical_file, last_tweet_id, filter)
     twitter = truck["twitter"]
     ical    = truck["ical"]
 
-    truck_cal = ical ? filter_ical(fetch_ical(ical), filter, twitter) : timeline_to_ical(twitter, filter, last_tweet_id)
+    truck_cal = ical ? filter_ical(fetch_ical(ical), filter, "@#{twitter}") : timeline_to_ical(twitter, filter, last_tweet_id)
     filtered_cal = merge_calendars(filtered_cal, truck_cal)
   end
 
