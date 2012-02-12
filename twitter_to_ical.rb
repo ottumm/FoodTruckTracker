@@ -31,6 +31,10 @@ def fetch_ical(url)
   return Icalendar::parse(open(url).read).first
 end
 
+def valid_created_field?(event)
+  return event.created.to_time > Time.now - 10.years
+end
+
 def filter_ical(cal, filter, name)
   filtered_cal = create_calendar()
   cal.events.each do |event|
@@ -38,7 +42,7 @@ def filter_ical(cal, filter, name)
     puts "\tTime: #{event.dtstart}"
     puts "\tLoc : #{event.summary}"
     if /#{filter}/i.match(event.summary)
-      if event.created.to_time < Time.now - 10.years
+      if !valid_created_field?(event)
         filtered_cal.event do
           dtstart  event.dtstart
           dtend    event.dtend
