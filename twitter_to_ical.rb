@@ -86,7 +86,7 @@ def timeline_to_ical(account, filter, last_tweet_id)
   return cal
 end
 
-def get_tweets(account, since_id)
+def fetch_tweets(account, since_id)
   puts "Fetching timeline for #{account}"
   return Twitter.user_timeline(account, {:since_id => (since_id or 1)})
 end
