@@ -135,4 +135,4 @@ def get_all_phrases(text)
   return phrases
 end
 
-main($ARGV[0], $ARGV[1], $ARGV[2], "hollis")
+main(ARGV[0], ARGV[1], ARGV[2], "hollis")
