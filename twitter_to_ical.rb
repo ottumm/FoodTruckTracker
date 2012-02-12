@@ -37,7 +37,7 @@ def filter_ical(cal, filter, name)
     puts "#{name} (ical)"
     puts "\tTime: #{event.dtstart}"
     puts "\tLoc : #{event.summary}"
-    if ( /#{filter}/i.match(event.summary) )
+    if /#{filter}/i.match(event.summary)
       if event.created.to_time < Time.now - 10.years
         filtered_cal.event do
           dtstart  event.dtstart
@@ -73,7 +73,7 @@ def timeline_to_ical(account, filter, last_tweet_id)
     puts "\tTime: #{time}"     unless time.nil?
     puts "\tLoc : #{location}" unless location.nil?
 
-    if ( time && location )
+    if time && location
       cal.event do
         dtstart     time.to_datetime
         dtend       (time + 2.hours).to_datetime
@@ -123,7 +123,7 @@ end
 def parse_time(tweet)
   get_all_phrases(tweet.text).each do |phrase|
     time = Chronic.parse(phrase, {:now => tweet.created_at})
-    return time if time
+    return time unless time.nil?
   end
   
   return nil
