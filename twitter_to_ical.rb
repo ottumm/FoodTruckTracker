@@ -35,12 +35,17 @@ def valid_created_field?(event)
   return event.created.to_time > Time.now - 10.years
 end
 
+def format_entry(name, text, location, time, created)
+  formatted_created  = created.nil?  ? "n/a" : created.strftime('%m/%d')
+  formatted_time     = time.nil?     ? "n/a" : time.strftime('%m/%d %H:%M')
+  formatted_location = location.nil? ? "n/a" : location
+  return "#{name} (#{formatted_created}) : #{formatted_time} @ #{location} : #{text}";
+end
+
 def filter_ical(cal, filter, name)
   filtered_cal = create_calendar()
   cal.events.each do |event|
-    puts "#{name} (ical)"
-    puts "\tTime: #{event.dtstart}"
-    puts "\tLoc : #{event.summary}"
+    puts format_entry(name, "ical", event.summary, event.dtstart, event.created)
     if /#{filter}/i.match(event.summary)
       if !valid_created_field?(event)
         filtered_cal.event do
@@ -73,10 +78,7 @@ def timeline_to_ical(account, filter, last_tweet_id)
   fetch_tweets(account, last_tweet_id).each do |tweet|
     time = parse_time(tweet)
     location = parse_location(tweet, filter)
-    puts "@#{tweet.user.screen_name} (#{tweet.created_at}): #{tweet.text}"
-    puts "\tTime: #{time}"     unless time.nil?
-    puts "\tLoc : #{location}" unless location.nil?
-
+    puts format_entry("@#{account}", tweet.text, location, time, tweet.created_at)
     if time && location
       cal.event do
         dtstart     time.to_datetime
