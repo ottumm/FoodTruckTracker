@@ -10,19 +10,20 @@ require 'icalendar'
 require 'date'
 require 'json'
 require 'open-uri'
+require 'optparse'
 
-def main(truck_file, ical_file, last_tweet_id, filter)
-  filtered_cal = create_calendar()
-  trucks = JSON.parse(File.open(truck_file, "r").read)
-  trucks.each do |truck|
-    twitter = truck["twitter"]
-    ical    = truck["ical"]
+def main(options)
+  filtered_cal = create_calendar({ :name => options[:cal_name] })
+  feeds = JSON.parse(File.open(options[:config], "r").read)
+  feeds.each do |feed|
+    twitter = feed["twitter"]
+    ical    = feed["ical"]
 
-    truck_cal = ical ? filter_ical(fetch_ical(ical), filter, "@#{twitter}") : timeline_to_ical(twitter, filter, last_tweet_id)
-    filtered_cal = merge_calendars(filtered_cal, truck_cal)
+    feed_cal = ical ? filter_ical(fetch_ical(ical), options[:filter], "@#{twitter}") : timeline_to_ical(twitter, options[:filter], options[:last_tweet])
+    filtered_cal = merge_calendars(filtered_cal, feed_cal)
   end
 
-  File.open(ical_file, 'w') {|f| f.write(filtered_cal.to_ical)} if ( ical_file )
+  File.open(options[:output], 'w') { |f| f.write(filtered_cal.to_ical) } unless options[:output].nil?
 end
 
 def fetch_ical(url)
@@ -69,8 +70,8 @@ def timeline_to_ical(account, filter, last_tweet_id)
     time = parse_time(tweet)
     location = parse_location(tweet, filter)
     puts "@#{tweet.user.screen_name} (#{tweet.created_at}): #{tweet.text}"
-    puts "\tTime: #{time}"     if time
-    puts "\tLoc : #{location}" if location
+    puts "\tTime: #{time}"     unless time.nil?
+    puts "\tLoc : #{location}" unless location.nil?
 
     if ( time && location )
       cal.event do
@@ -91,9 +92,9 @@ def fetch_tweets(account, since_id)
   return Twitter.user_timeline(account, {:since_id => (since_id or 1)})
 end
 
-def create_calendar
+def create_calendar(opts = {})
   cal = Icalendar::Calendar.new
-  cal.custom_property("X-WR-CALNAME;VALUE=TEXT", "Twitter Food Trucks")
+  cal.custom_property("X-WR-CALNAME;VALUE=TEXT", opts[:name]) unless opts[:name].nil?
   cal.custom_property("X-WR-TIMEZONE;VALUE=TEXT", "America/Los_Angeles")
 
   cal.timezone do
@@ -145,4 +146,17 @@ def get_all_phrases(text)
   return phrases
 end
 
-main(ARGV[0], ARGV[1], ARGV[2], "hollis")
+options = {}
+optparse = OptionParser.new do |opts|
+  opts.banner = "Usage: twitter_to_ical.rb [options...]"
+  opts.on("-c", "--config FILE",        "Config file")         { |c| options[:config]     = c }
+  opts.on("-o", "--output [FILE]",      "Output to iCal file") { |o| options[:output]     = o }
+  opts.on("-f", "--filter [REGEX]",     "Filter by REGEX")     { |f| options[:filter]     = f }
+  opts.on("-n", "--name [NAME]",        "Calendar name")       { |n| options[:cal_name]   = n }
+  opts.on("-t", "--last-tweet-id [ID]", "Last Tweet id")       { |t| options[:last_tweet] = t }
+  opts.on("-h", "--help",               "Display this screen") { puts opts or exit }
+end.parse!
+
+raise OptionParser::MissingArgument if options[:config].nil?
+
+main(options)
