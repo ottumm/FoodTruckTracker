@@ -11,19 +11,33 @@ require 'date'
 require 'json'
 require 'open-uri'
 require 'optparse'
+require 'tweet_logger'
 
 def main(options)
+  logger = TweetLogger.new
+  filter = options[:filter]
+  last_tweet = options[:last_tweet]
   filtered_cal = create_calendar({ :name => options[:cal_name] })
   feeds = JSON.parse(File.open(options[:config], "r").read)
   feeds.each do |feed|
     twitter = feed["twitter"]
     ical    = feed["ical"]
 
-    feed_cal = ical ? filter_ical(fetch_ical(ical), options[:filter], "@#{twitter}") : timeline_to_ical(twitter, options[:filter], options[:last_tweet])
+    feed_cal = ical ? filter_ical(fetch_ical(ical), filter, "@#{twitter}") : timeline_to_ical(twitter, filter, last_tweet, logger)
     filtered_cal = merge_calendars(filtered_cal, feed_cal)
   end
+  ical_to_file(filtered_cal, options[:output])
+  save_tweets(logger, options[:tweet_dir])
+end
 
-  File.open(options[:output], 'w') { |f| f.write(filtered_cal.to_ical) } unless options[:output].nil?
+def ical_to_file(cal, path)
+  File.open(path, 'w') { |f| f.write(cal.to_ical) } unless path.nil?
+end
+
+def save_tweets(logger, dir)
+  return if dir.nil?
+  path = dir + "/" + Time.now.strftime("%y_%m_%d_%H%M%S") + ".yml"
+  File.open(path, 'w') { |f| f.write(YAML::dump(logger.tweets)) }
 end
 
 def fetch_ical(url)
@@ -72,10 +86,11 @@ def merge_calendars(cal1, cal2)
   return merged_calendar
 end
 
-def timeline_to_ical(account, filter, last_tweet_id)
+def timeline_to_ical(account, filter, last_tweet_id, logger)
   cal = create_calendar()
 
   fetch_tweets(account, last_tweet_id).each do |tweet|
+    logger.log(tweet)
     time = parse_time(tweet)
     location = parse_location(tweet, filter)
     puts format_entry("@#{account}", tweet.text, location, time, tweet.created_at)
@@ -160,6 +175,7 @@ optparse = OptionParser.new do |opts|
   opts.on("-f", "--filter [REGEX]",     "Filter by REGEX")     { |f| options[:filter]     = f }
   opts.on("-n", "--name [NAME]",        "Calendar name")       { |n| options[:cal_name]   = n }
   opts.on("-t", "--last-tweet-id [ID]", "Last Tweet id")       { |t| options[:last_tweet] = t }
+  opts.on("-d", "--tweet-dir [DIR]",    "Log tweets here")     { |d| options[:tweet_dir]  = d }
   opts.on("-h", "--help",               "Display this screen") { puts opts or exit }
 end.parse!
 
