@@ -179,5 +179,8 @@ end.parse!
 
 raise OptionParser::MissingArgument if options[:config].nil?
 
-feeds = JSON.parse(File.open(options[:config], "r").read)
-main(options, feeds)
+config = JSON.parse(File.open(options[:config], "r").read)
+options[:cal_name] = config["name"]   if options[:cal_name].nil?
+options[:filter]   = config["filter"] if options[:filter].nil?
+
+main(options, config["feeds"])
