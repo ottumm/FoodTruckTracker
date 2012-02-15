@@ -24,7 +24,7 @@ def main(options)
     ical    = feed["ical"]
 
     feed_cal = ical ? filter_ical(fetch_ical(ical), filter, "@#{twitter}") : timeline_to_ical(twitter, filter, last_tweet, logger)
-    filtered_cal = merge_calendars(filtered_cal, feed_cal)
+    merge_calendar_into!(filtered_cal, feed_cal)
   end
   ical_to_file(filtered_cal, options[:output])
   save_tweets(logger, options[:tweet_dir])
@@ -79,11 +79,9 @@ def filter_ical(cal, filter, name)
   return filtered_cal
 end
 
-def merge_calendars(cal1, cal2)
-  merged_calendar = create_calendar()
-  cal1.events.each { |event| merged_calendar.add_event(event) }
-  cal2.events.each { |event| merged_calendar.add_event(event) }
-  return merged_calendar
+def merge_calendar_into!(dest, src)
+  src.events.each { |event| dest.add_event(event) }
+  return dest
 end
 
 def timeline_to_ical(account, filter, last_tweet_id, logger)
