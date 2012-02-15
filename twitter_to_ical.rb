@@ -13,12 +13,12 @@ require 'open-uri'
 require 'optparse'
 require 'tweet_logger'
 
-def main(options)
+def main(options, feeds)
   logger = TweetLogger.new
   filter = options[:filter]
   last_tweet = options[:last_tweet]
   filtered_cal = create_calendar({ :name => options[:cal_name] })
-  feeds = JSON.parse(File.open(options[:config], "r").read)
+  
   feeds.each do |feed|
     twitter = feed["twitter"]
     ical    = feed["ical"]
@@ -179,4 +179,5 @@ end.parse!
 
 raise OptionParser::MissingArgument if options[:config].nil?
 
-main(options)
+feeds = JSON.parse(File.open(options[:config], "r").read)
+main(options, feeds)
