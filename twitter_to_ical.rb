@@ -11,7 +11,7 @@ require 'date'
 require 'json'
 require 'open-uri'
 require 'optparse'
-require 'tweet_logger'
+require 'event_logger'
 
 def main(options, feeds)
   logger = TweetLogger.new
