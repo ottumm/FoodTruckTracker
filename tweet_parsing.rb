@@ -8,7 +8,6 @@ def timeline_to_ical(account, last_tweet_id, logger)
 
   fetch_tweets(account, last_tweet_id).each do |tweet|
     logger.log("@#{account}", tweet) unless logger.nil?
-    puts "@#{account} (#{tweet.created_at.strftime('%m/%d')}): #{tweet.text}"
     parse_events(tweet.text, tweet.created_at).each do |event|
       puts "\t#{event[:time]}\t#{event[:loc]}"
       cal.event do
