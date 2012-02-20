@@ -84,12 +84,7 @@ def parse_time(text, created_at)
   get_all_phrases(text).each do |phrase|
     time = Chronic.parse(phrase, {:now => created_at, :ambiguous_time_range => 10})
     if !time.nil?
-      old_time = composite_time.nil? ? nil : composite_time.clone
       composite_time = combine_times(composite_time, time, created_at)
-      if old_time != composite_time
-        #puts phrase
-        #puts "\t#{composite_time}, #{time} => #{composite_time}"
-      end
     end
   end
 
