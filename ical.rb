@@ -12,7 +12,6 @@ end
 def filter_ical(cal, filter, name, logger)
   filtered_cal = create_calendar()
   cal.events.each do |event|
-    logger.log(name, event)
     if /#{filter}/i.match(event.summary)
       if !valid_created_field?(event)
         filtered_cal.event do
