@@ -2,29 +2,37 @@ require 'rubygems'
 require 'icalendar'
 require 'active_support/core_ext/numeric/time'
 require 'active_support/time'
-require 'event_logger'
 require 'open-uri'
 
 def valid_created_field?(event)
   return event.created.nil? || event.created.to_time > Time.now - 10.years
 end
 
-def filter_ical(cal, filter, name, logger)
+def fixup_ical(cal, name)
+  new_cal = create_calendar()
+  cal.events.each do |event|
+    if !valid_created_field?(event)
+      new_cal.event do
+        dtstart  event.dtstart
+        dtend    event.dtend
+        summary  name
+        location event.summary
+      end
+    else
+      event.location = event.summary
+      event.summary = name
+      new_cal.add_event(event)
+    end
+  end
+
+  return new_cal
+end
+
+def filter_ical(cal, filter, name)
   filtered_cal = create_calendar()
   cal.events.each do |event|
-    if /#{filter}/i.match(event.summary)
-      if !valid_created_field?(event)
-        filtered_cal.event do
-          dtstart  event.dtstart
-          dtend    event.dtend
-          summary  name
-          location event.summary
-        end
-      else
-        event.location = event.summary
-        event.summary  = name
-        filtered_cal.add_event(event)
-      end
+    if /#{filter}/i.match(event.location)
+      filtered_cal.add_event(event)
     end
   end
 

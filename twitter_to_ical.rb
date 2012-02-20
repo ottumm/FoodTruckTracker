@@ -25,8 +25,9 @@ end
 def get_calendar(feed, filter, last_tweet, logger)
   twitter  = feed["twitter"]
   ical     = feed["ical"]
-  calendar = ical ? fetch_ical(ical) : timeline_to_ical(twitter, last_tweet, logger)
-  return filter_ical(calendar, filter, "@#{twitter}", logger)
+  name     = "@#{twitter}"
+  calendar = ical ? fixup_ical(fetch_ical(ical), name) : timeline_to_ical(twitter, last_tweet, logger)
+  return filter_ical(calendar, filter, name)
 end
 
 options = {}
