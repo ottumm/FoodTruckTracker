@@ -83,10 +83,21 @@ def combine_times(t1, t2, created_at)
   end
 end
 
+def parse_relative_time(*args)
+  begin
+    return Chronic.parse(*args)
+  rescue NoMethodError => e
+    arg_string = args.collect {|a| a.inspect}.join(", ")
+    $stderr.puts "Chronic.parse(#{arg_string})"
+    $stderr.puts e.backtrace
+    return nil
+  end
+end
+
 def parse_time(text, created_at)
   composite_time = nil
   get_all_phrases(text).each do |phrase|
-    time = Chronic.parse(phrase, {:now => created_at, :ambiguous_time_range => 10})
+    time = parse_relative_time(phrase, {:now => created_at, :ambiguous_time_range => 10})
     if !time.nil?
       composite_time = combine_times(composite_time, time, created_at)
     end
