@@ -23,13 +23,10 @@ def main(options, feeds)
 end
 
 def get_calendar(feed, filter, last_tweet, logger)
-  twitter = feed["twitter"]
-  ical    = feed["ical"]
-  if ical
-    return filter_ical(fetch_ical(ical), filter, "@#{twitter}", logger)
-  else
-    return timeline_to_ical(twitter, filter, last_tweet, logger)
-  end
+  twitter  = feed["twitter"]
+  ical     = feed["ical"]
+  calendar = ical ? fetch_ical(ical) : timeline_to_ical(twitter, last_tweet, logger)
+  return filter_ical(calendar, filter, "@#{twitter}", logger)
 end
 
 options = {}
