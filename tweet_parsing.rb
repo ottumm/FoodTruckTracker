@@ -51,7 +51,7 @@ def parse_time_and_location(text, created_at)
 end
 
 def split_events(text)
-  return text.split(/[,\.]/i)
+  return text.split(/[,;\.\!]/i)
 end
 
 def fetch_tweets(account, since_id)
@@ -64,7 +64,7 @@ def specific_day?(time, created_at)
 end
 
 def specific_time?(time)
-  return !time.nil? && time.hour != 12 && time.hour != 0 && time.hour >= 9 && time.hour <= 21
+  return !time.nil? && time.hour != 12 && time.hour != 0 && time.hour >= 11 && time.hour <= 21
 end
 
 def use_time?(time, other, created_at)
@@ -107,16 +107,21 @@ def parse_time(text, created_at)
   return composite_time
 end
 
+def add_missing_spaces(text)
+  return text.gsub(/([a-z]):/i, '\1: ')
+end
+
 def consume_location!(text)
-  [
-    {:r => /\s(@|at\s)\s*(.+)/i,         :g => 2},
-    {:r => /([^\s,]+ (and|&) [^\s,]+)/i, :g => 1},
-    {:r => /\: ?(.+)/i,                  :g => 1}
+  loc_text = add_missing_spaces(text)
+  [/(?:@|at\s|on\s)\s*([^,\.]+)/i,
+   /([^\s,\.]+( and | ?& ?)[^\s,\.]+)/i,
+   /\:\s+([^,\.]+)/i
   ].each do |pattern|
-    match = pattern[:r].match(text)
+    match = pattern.match(loc_text)
     if !match.nil?
-      loc = match[pattern[:g]]
+      loc = match[1]
       loc.gsub!(/ ?from.*/i, "")
+      loc.gsub!(/ ?\d\d-\d\d?.*/, "")
       text.gsub!(Regexp.compile(Regexp.escape(loc)), "")
       return loc
     end
@@ -127,7 +132,7 @@ end
 
 def get_all_phrases(text)
   phrases = []
-  words = text.gsub(/([a-z]):/i, '\1: ').split(/\s+|\: |-\d*/)
+  words = add_missing_spaces(text).split(/\s+|\: |-(?:\d|:)*/)
   words.length.downto(1) do |len|
     0.upto(words.length - len) do |start|
       phrases.push(words.slice(start, len).join(" "))
