@@ -20,6 +20,7 @@ def get_expected_parsings
 				status[:text] = line.split("\t")[1]
 			end
 		end
+		expected.push(status.clone) unless status[:expected].empty?
 	end
 	return expected
 end
