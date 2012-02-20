@@ -6,7 +6,7 @@ require 'event_logger'
 require 'open-uri'
 
 def valid_created_field?(event)
-  return event.created.to_time > Time.now - 10.years
+  return event.created.nil? || event.created.to_time > Time.now - 10.years
 end
 
 def filter_ical(cal, filter, name, logger)
