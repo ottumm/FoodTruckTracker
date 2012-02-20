@@ -34,6 +34,11 @@ def parse_events(text, created_at)
     events.push(event) unless event.nil?
   end
 
+  if events.empty?
+    event = parse_time_and_location(text, created_at)
+    events.push(event) unless event.nil?
+  end
+
   return events
 end
 
