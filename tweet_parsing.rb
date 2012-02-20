@@ -89,7 +89,8 @@ def parse_relative_time(*args)
   rescue NoMethodError => e
     arg_string = args.collect {|a| a.inspect}.join(", ")
     $stderr.puts "Chronic.parse(#{arg_string})"
-    $stderr.puts e.backtrace
+    $stderr.puts e.message
+    $stderr.puts e.backtrace.collect {|l| "\t#{l}"}
     return nil
   end
 end
