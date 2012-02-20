@@ -11,8 +11,7 @@ class EventLogger
 	end
 
 	def log_entry(name, text, created)
-		formatted_created  = created.nil?  ? "n/a" : created.strftime('%m/%d')
-		puts "#{name} (#{formatted_created}) : #{text}"
+		puts "#{name} (#{created}) : #{text}"
 	end
 
 	def log(name, entry)
