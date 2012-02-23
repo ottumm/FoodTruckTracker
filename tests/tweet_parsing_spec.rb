@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'rspec'
-require 'tweet_parsing'
+require '../app/tweet_parsing'
 require 'ruby-debug'
 
 def get_expected_parsings

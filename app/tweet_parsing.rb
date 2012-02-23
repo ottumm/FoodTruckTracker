@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'twitter'
-require 'ical'
+require "#{File.dirname(__FILE__)}/ical"
 require 'chronic'
 
 def timeline_to_ical(account, last_tweet_id, logger)
