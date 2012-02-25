@@ -108,12 +108,12 @@ def parse_time(text, created_at)
   return composite_time
 end
 
-def add_missing_spaces(text)
+def normalize(text)
   return text.gsub(/([a-z]):/i, '\1: ')
 end
 
 def consume_location!(text)
-  loc_text = add_missing_spaces(text)
+  loc_text = normalize(text)
   [/(?:@|at\s|on\s)\s*([^,\.]+)/i,
    /([^\s,\.]+( and | ?& ?)[^\s,\.]+)/i,
    /\:\s+([^,\.]+)/i
@@ -133,7 +133,7 @@ end
 
 def get_all_phrases(text)
   phrases = []
-  words = add_missing_spaces(text).split(/\s+|\: |-(?:\d|:)*/)
+  words = normalize(text).split(/\s+|\: |-(?:\d|:)*/)
   words.length.downto(1) do |len|
     0.upto(words.length - len) do |start|
       phrases.push(words.slice(start, len).join(" "))
