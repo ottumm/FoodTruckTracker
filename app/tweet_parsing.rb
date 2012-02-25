@@ -1,7 +1,8 @@
 require 'rubygems'
 require 'twitter'
-require "#{File.dirname(__FILE__)}/ical"
 require 'chronic'
+require "#{File.dirname(__FILE__)}/ical"
+require "#{File.dirname(__FILE__)}/geocoding"
 
 def timeline_to_ical(account, last_tweet_id, logger)
   cal = create_calendar()

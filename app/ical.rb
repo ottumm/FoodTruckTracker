@@ -1,4 +1,5 @@
 require 'rubygems'
+require 'bundler/setup'
 require 'icalendar'
 require 'active_support/core_ext/numeric/time'
 require 'active_support/time'
