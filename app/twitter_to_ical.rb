@@ -1,10 +1,10 @@
 require 'rubygems'
-require 'ruby-debug'
+require 'bundler/setup'
 require 'json'
 require 'optparse'
-require 'event_logger'
-require 'ical'
-require 'tweet_parsing'
+require "#{File.dirname(__FILE__)}/ical"
+require "#{File.dirname(__FILE__)}/event_logger"
+require "#{File.dirname(__FILE__)}/tweet_parsing"
 
 def main(options, feeds)
   logger = EventLogger.new

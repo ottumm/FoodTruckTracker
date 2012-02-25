@@ -1,11 +1,11 @@
 require 'rubygems'
+require 'bundler/setup'
 require 'rspec'
-require '../app/tweet_parsing'
-require 'ruby-debug'
+require "#{File.dirname(__FILE__)}/../app/tweet_parsing"
 
 def get_expected_parsings
 	expected = []
-	File.open("expected-parse.txt") do |file|
+	File.open("#{File.dirname(__FILE__)}/expected-parse.txt") do |file|
 		status = {:text => nil, :created_at => nil, :expected => []}
 		while line = file.gets
 			line = line.chomp

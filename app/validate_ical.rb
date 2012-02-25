@@ -1,7 +1,7 @@
 require 'rubygems'
+require 'bundler/setup'
 require 'nokogiri'
 require 'open-uri'
-require 'ruby-debug'
 require 'rest_client'
 
 file = ARGV[0]
