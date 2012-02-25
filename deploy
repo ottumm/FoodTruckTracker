@@ -1,3 +1,0 @@
-#!/bin/sh
-scp -i ec2/id.pem -r app ec2-user@ec2-23-20-37-101.compute-1.amazonaws.com:~/app.temp
-ssh -i ec2/id.pem ec2-user@ec2-23-20-37-101.compute-1.amazonaws.com "rm -rf ~/app && mv ~/app.temp ~/app"
