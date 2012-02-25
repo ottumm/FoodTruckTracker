@@ -6,7 +6,7 @@ require 'yaml'
 path = ARGV[0]
 tweets = {}
 
-Dir.foreach(path).collect {|v| "#{path}/#{v}"}.select {|v| File.file?(v)}.each do |file|
+Dir.foreach(path).map {|v| "#{path}/#{v}"}.select {|v| File.file?(v)}.each do |file|
 	YAML::load(File.open(file).read).each {|tweet| tweets[tweet.id] = tweet}
 end
 
