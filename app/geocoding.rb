@@ -8,7 +8,7 @@ require 'json'
 def geocode(text, opts={})
 	def normalize(address)
 		ret = address.gsub /\/|&/, " & "
-		ret.gsub! /.*\s+(\S+\s+(and|&))/, "\\1"
+		ret.gsub! /.*\s+(\S+\s+(and|&))/, '\1'
 		ret.gsub /\s\s/, " "
 	end
 
