@@ -97,7 +97,7 @@ Mon Feb 13 08:59:33 -0800 2012	serving all your favs at The Lunch Box. 246 Ritch
 Mon Feb 13 09:03:13 -0800 2012	This weeks schedule: Wed. 62nd & Doyle 11a-2p, Thurs. Private event, Sat. Marin Country Mart Farmers Market 9a-2p, Sun. OTG Marin 11a-3p!
 	Wed Feb 15 11:00:00 -0800 2012	62nd & Doyle	geo
 	Thu Feb 16 12:00:00 -0800 2012	Private event
-	Sat Feb 18 09:00:00 -0800 2012	Marin Country Mart Farmers Market	geo
+	Sat Feb 18 09:00:00 -0800 2012	Marin Country Mart Farmers Market
 	Sun Feb 19 11:00:00 -0800 2012	OTG Marin	geo
 Mon Feb 13 10:12:13 -0800 2012	Munchies, here is our schedule for this wk: Tue: 62nd & Doyle Eville, Wed: 2100 Powell, Thu: Corporate Ctr Marin, Fri: 53rd & Hollis, Eville
 Mon Feb 13 10:22:56 -0800 2012	Check it...the schedule is up! Catch us this week!
