@@ -28,6 +28,35 @@ def get_calendar(feed, filter, last_tweet, logger)
   return filter_ical(calendar, filter, name)
 end
 
+def timeline_to_ical(account, last_tweet_id, logger)
+  cal = create_calendar()
+
+  fetch_tweets(account, last_tweet_id).each do |tweet|
+    logger.log("@#{account}", tweet) unless logger.nil?
+    TweetParser.events(tweet.text, tweet.created_at).each do |event|
+      puts "\t#{event[:time]}\t#{event[:loc]}"
+      cal.event do
+        dtstart     event[:time].to_datetime
+        dtend       (event[:time] + 2.hours).to_datetime
+        summary     "@#{tweet.user.screen_name}"
+        location    event[:loc]
+        description "#{tweet.created_at} - #{tweet.text}\n#{tweet_url(tweet)}"
+      end
+    end
+  end
+
+  return cal
+end
+
+def tweet_url(tweet)
+  return "http://twitter.com/#{tweet.user.screen_name}/status/#{tweet.id}"
+end
+
+def fetch_tweets(account, since_id)
+  puts "Fetching timeline for @#{account}"
+  return Twitter.user_timeline(account, {:since_id => (since_id or 1)})
+end
+
 options = {}
 optparse = OptionParser.new do |opts|
   opts.banner = "Usage: twitter_to_ical.rb [options...]"
