@@ -14,7 +14,6 @@ def geocode(text, opts={})
 
 	def geocode_address(a)
 		address = normalize(a)
-		puts "Google geocode( #{address} )"
 		res = RestClient.get 'http://maps.googleapis.com/maps/api/geocode/json', :params => {:address => address, :sensor => "false"}
 		JSON.parse(res.to_s)["results"]
 	end

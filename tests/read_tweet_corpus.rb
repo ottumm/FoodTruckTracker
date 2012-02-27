@@ -9,9 +9,9 @@ def read_tweet_corpus
 		status = {:text => nil, :created_at => nil, :expected => []}
 		while line = file.gets
 			line = line.chomp
-			match = /^\t([^\t]+)\t(.*)/.match(line)
-			if match
-				status[:expected].push({:time => Time.parse(match[1]), :loc => match[2]})
+			if /^\t/.match line
+				fields = line.split /\t/
+				status[:expected].push({:time => Time.parse(fields[1]), :loc => fields[2], :geocode => fields[3]})
 			else
 				corpus.push(status.clone) unless status[:expected].empty?
 

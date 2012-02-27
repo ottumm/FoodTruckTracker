@@ -28,15 +28,25 @@ def tweet_url(tweet)
   return "http://twitter.com/#{tweet.user.screen_name}/status/#{tweet.id}"
 end
 
+def normalize(text)
+  day_of_week  = '(?:sun(?:day)?|mon(?:day)?|tues?(:?day)?|wed(?:nesday)?|thur?s?(?:day)?|fri(?:day)?|sat(?:urday)?)'
+
+  ret = text.clone
+  ret.gsub! /(#{day_of_week})\./i, '\1:'
+  ret.gsub! /([a-z]):([^ ])/i, '\1: \2'
+  return ret
+end
+
 def parse_events(text, created_at)
+  normalized_text = normalize(text)
   events = []
-  split_events(text).each do |event_text|
+  split_events(normalized_text).each do |event_text|
     event = parse_time_and_location(event_text, created_at)
     events.push(event) unless event.nil?
   end
 
   if events.empty?
-    event = parse_time_and_location(text, created_at)
+    event = parse_time_and_location(normalized_text, created_at)
     events.push(event) unless event.nil?
   end
 
@@ -84,7 +94,7 @@ def combine_times(t1, t2, created_at)
   end
 end
 
-def parse_relative_time(*args)
+def parse_with_chronic(*args)
   begin
     return Chronic.parse(*args)
   rescue NoMethodError => e
@@ -96,10 +106,21 @@ def parse_relative_time(*args)
   end
 end
 
+def parse_relative_time(phrase, created_at)
+  time = parse_with_chronic(phrase, {:now => created_at, :ambiguous_time_range => 10})
+  if time.nil? && /lunch/i.match(phrase)
+    time = created_at.clone.change({:hour => 12})
+  elsif time.nil? && /dinner/i.match(phrase)
+    time = created_at.clone.change({:hour => 18})
+  end
+
+  return time
+end
+
 def parse_time(text, created_at)
   composite_time = nil
   get_all_phrases(text).each do |phrase|
-    time = parse_relative_time(phrase, {:now => created_at, :ambiguous_time_range => 10})
+    time = parse_relative_time(phrase, created_at)
     if !time.nil?
       composite_time = combine_times(composite_time, time, created_at)
     end
@@ -108,21 +129,21 @@ def parse_time(text, created_at)
   return composite_time
 end
 
-def normalize(text)
-  return text.gsub(/([a-z]):/i, '\1: ')
-end
-
 def consume_location!(text)
-  loc_text = normalize(text)
-  [/(?:@|at\s|on\s)\s*([^,\.]+)/i,
-   /([^\s,\.]+( and | ?& ?)[^\s,\.]+)/i,
-   /\:\s+([^,\.]+)/i
+  time         = '\d\d?(?:\d\d)?(?:am?|pm?)'
+  time_range   = "#{time}-#{time}"
+  loc_prefix   = "(?:@|at\\s|on\\s|[:\\.]\\s+)"
+  intersection = '[^\s,\.]+(?: and | ?& ?| ?\/ ?)[^\s,\.]+'
+  loc_suffix   = "(?: ?#{time_range}|[,\\.]| ?from).*"
+
+  [
+    /(#{intersection})/i,
+    /#{loc_prefix}(.*)/i
   ].each do |pattern|
-    match = pattern.match(loc_text)
-    if !match.nil?
+    match = pattern.match(text)
+    if !match.nil? && !match[1].nil?
       loc = match[1]
-      loc.gsub!(/ ?from.*/i, "")
-      loc.gsub!(/ ?\d\d-\d\d?.*/, "")
+      loc.gsub! /#{loc_suffix}/i, ""
       text.gsub!(Regexp.compile(Regexp.escape(loc)), "")
       return loc
     end
@@ -133,7 +154,7 @@ end
 
 def get_all_phrases(text)
   phrases = []
-  words = normalize(text).split(/\s+|\: |-(?:\d|:)*/)
+  words = text.split(/\s+|\: |-(?:\d|:)*/)
   words.length.downto(1) do |len|
     0.upto(words.length - len) do |start|
       phrases.push(words.slice(start, len).join(" "))

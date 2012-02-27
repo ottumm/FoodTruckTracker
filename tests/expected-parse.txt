@@ -4,7 +4,7 @@ Wed Jan 18 17:01:09 -0800 2012	Thurs happy hour 5-8 @Prizefighter in Eville, yum
 	Thu Jan 19 17:00:00 -0800 2012	Prizefighter in Eville
 Thu Jan 19 16:25:47 -0800 2012	Just pulled 'er up @Prizefighterbar, 67th & Hollis, 5-8pm http://t.co/w0dOntiu
 Fri Jan 20 10:21:34 -0800 2012	Good morning Emeryville! We're selling today at 2100 Powell from 11:30-1:30. We've got our awning!
-	Fri Jan 20 11:30:00 -0800 2012	2100 Powell
+	Fri Jan 20 11:30:00 -0800 2012	2100 Powell	geo
 Sat Jan 21 11:20:44 -0800 2012	Sun is shining at the Grand lake market. No lines!
 Wed Jan 25 14:06:08 -0800 2012	Berkeley, we're back!  Off the Grid Shattuck & Rose, 5-8 pm.
 Wed Jan 25 17:57:09 -0800 2012	Celebrating o ur return to Off the Grid with new sides: green goddess salad and Vesta-taters, home fried yukons with harissa and aioli!
@@ -33,7 +33,7 @@ Mon Feb 06 14:07:17 -0800 2012	Best bday present ever! http://t.co/qfU55WeB
 Mon Feb 06 14:39:57 -0800 2012	Best bday present ever! http://t.co/zqhkObhJ
 Mon Feb 06 14:41:24 -0800 2012	@JennieBarber we love all our customers :)
 Tue Feb 07 08:58:21 -0800 2012	Nothings better than Korean BBQ on a drizzly day. Grub with us on Hollis/64th 11-1:30
-	Tue Feb 07 11:00:00 -0800 2012	Hollis/64th
+	Tue Feb 07 11:00:00 -0800 2012	Hollis/64th	geo
 Tue Feb 07 09:19:21 -0800 2012	Tmro find us @ 62nd & Doyle w/ delicious breakfast treats! 11a-2p!
 Tue Feb 07 10:06:30 -0800 2012	Munchies see you all tomorrow @ 64th and Hollis Emeryville with some fantastic concoction of regional Indian cooking;)
 Tue Feb 07 10:09:07 -0800 2012	PLEASE PLEASE VOTE FOR US! channel 7's A-List http://t.co/1ZEHx9bD http://t.co/ZcC3UZfu
@@ -42,7 +42,8 @@ Tue Feb 07 11:14:37 -0800 2012	It stopped raining so come get korritos, kimchee 
 Tue Feb 07 12:16:00 -0800 2012	@SimonMajumdar Yes we would love to have you, in addition some Bengali delicacies for your taste bud sir:)
 Tue Feb 07 13:07:31 -0800 2012	I got see a sneak peak of @elhuaracheloco brick & mortar @ Marin Country Mart! Absolutely beautiful can't wait for the opening!
 Wed Feb 08 09:11:02 -0800 2012	Lunch 11-2 @Truckstopsf Mission & 2nd, dinner OTG Berkeley Shattuck & Rose, with many other trucks!
-	Wed Feb 08 11:00:00 -0800 2012	Truckstopsf Mission & 2nd
+	Wed Feb 08 11:00:00 -0800 2012	Mission & 2nd	geo
+	Wed Feb 08 18:00:00 -0800 2012	Shattuck & Rose	geo
 Wed Feb 08 09:22:30 -0800 2012	Join us and other great food trucks at OTG Minna in the Minna Tunnel. 5th/Minna 11-2
 Wed Feb 08 09:44:35 -0800 2012	Namaste Emeryville Munchies we r getting ready to serve you @ 64th and Hollis from 11:30 - 2 PM today !!!
 Wed Feb 08 09:52:11 -0800 2012	Sry folks no service in E-Ville today something going on w/ the propane, can't get the grills hot!
@@ -53,8 +54,8 @@ Wed Feb 08 14:14:29 -0800 2012	@MickBruno1 our email is munchindia @munchindia.c
 Wed Feb 08 15:09:23 -0800 2012	@ Emeryville we'll see you next week w/ a surprise to make it up to you for our absence!
 Wed Feb 08 15:11:44 -0800 2012	Feels like summer! N Berkeley OTG tonight, 5-8. Rose & Shattuck.
 Thu Feb 09 09:29:30 -0800 2012	It's SF all day! Lunch at 75 Hawthorne, dinner at OTG Haight on Stanyan/Waller 5-8
-	Thu Feb 09 12:00:00 -0800 2012	75 Hawthorne
-	Thu Feb 09 17:00:00 -0800 2012	Stanyan/Waller
+	Thu Feb 09 12:00:00 -0800 2012	75 Hawthorne	geo
+	Thu Feb 09 17:00:00 -0800 2012	Stanyan/Waller	geo
 Thu Feb 09 10:43:41 -0800 2012	It's beautiful here in Emeryville! Come by for a sandwich on Hollis at 64th. Selling 11:30-1:30.
 Thu Feb 09 10:48:19 -0800 2012	Namaste Marin Munchies we r getting ready to serve you @ the Corporate Center from 11:30-2PM today!!!
 Thu Feb 09 11:31:42 -0800 2012	Today Chef Afroza is introducing Kolkata Keema Roll and Fulton Valley Chicken Kata Kat !!!! mmmmm...
@@ -88,15 +89,16 @@ Sat Feb 11 16:55:07 -0800 2012	You want it? You got it baby you got it...truffle
 Sat Feb 11 17:02:54 -0800 2012	@DrakesBrewery come get ya some, hottie.
 Sat Feb 11 20:52:52 -0800 2012	Its been a fantastic week! I hope you had a great one too. See y'all monday lunch, burgerlovers! Til then...
 Sun Feb 12 19:24:34 -0800 2012	Munchies, here is our schedule for the coming week: Tue: 62nd & Doyle Eville, Wed:2100 Powell, Thu: Corporate Ctr, Fri: 53rd & Hollis Eville
-	Tue Feb 14 12:00:00 -0800 2012	62nd & Doyle
-	Wed Feb 15 12:00:00 -0800 2012	2100 Powell
+	Tue Feb 14 12:00:00 -0800 2012	62nd & Doyle	geo
+	Wed Feb 15 12:00:00 -0800 2012	2100 Powell	geo
 	Thu Feb 16 12:00:00 -0800 2012	Corporate Ctr
-	Fri Feb 17 12:00:00 -0800 2012	53rd & Hollis
+	Fri Feb 17 12:00:00 -0800 2012	53rd & Hollis	geo
 Mon Feb 13 08:59:33 -0800 2012	serving all your favs at The Lunch Box. 246 Ritch, SF 11:30-1:30
 Mon Feb 13 09:03:13 -0800 2012	This weeks schedule: Wed. 62nd & Doyle 11a-2p, Thurs. Private event, Sat. Marin Country Mart Farmers Market 9a-2p, Sun. OTG Marin 11a-3p!
-	Wed Feb 15 11:00:00 -0800 2012	62nd & Doyle
-	Sat Feb 18 09:00:00 -0800 2012	Marin Country Mart Farmers Market
-	Sun Feb 19 11:00:00 -0800 2012	OTG Marin
+	Wed Feb 15 11:00:00 -0800 2012	62nd & Doyle	geo
+	Thu Feb 16 12:00:00 -0800 2012	Private event
+	Sat Feb 18 09:00:00 -0800 2012	Marin Country Mart Farmers Market	geo
+	Sun Feb 19 11:00:00 -0800 2012	OTG Marin	geo
 Mon Feb 13 10:12:13 -0800 2012	Munchies, here is our schedule for this wk: Tue: 62nd & Doyle Eville, Wed: 2100 Powell, Thu: Corporate Ctr Marin, Fri: 53rd & Hollis, Eville
 Mon Feb 13 10:22:56 -0800 2012	Check it...the schedule is up! Catch us this week!
 Mon Feb 13 11:26:17 -0800 2012	Schedule mix-up. We're NOT in SF, but 8000 Marina Blvd, Brisbane 1145-1:30
@@ -155,7 +157,7 @@ Fri Feb 17 12:54:41 -0800 2012	@BlueSuedeShooz this isn't private, next stop is.
 Fri Feb 17 14:17:34 -0800 2012	We had a great afternoon lunch crowd today @ 53rd & Hollis. Thx to everyone that came, see you all in 2 weeks !!!
 Fri Feb 17 19:08:07 -0800 2012	Hey y'all! @zynga ate up all their grub on the fly so we're back an slingin' EARLY!! What? Come get some friday goin' on..
 Fri Feb 17 19:08:55 -0800 2012	@prizefighter 67th& Hollis, 7:30 til 10:00 pm!! Eville!!
-	Fri Feb 17 19:30:00 -0800 2012	prizefighter 67th& Hollis
+	Fri Feb 17 19:30:00 -0800 2012	67th& Hollis	geo
 Fri Feb 17 19:55:25 -0800 2012	@chowdermobile right back at ya!
 Sat Feb 18 06:04:01 -0800 2012	Gettin ready for the Farmers Market @ Marin Country Mart! We'll be there from 9a-2p!
 Sat Feb 18 09:16:10 -0800 2012	We are open @ Marin Country Mart Farmers Market until 2p!
@@ -163,7 +165,7 @@ Sat Feb 18 12:09:28 -0800 2012	@iamxande nice...figuratively or otherwise?
 Sat Feb 18 12:53:09 -0800 2012	Folks we r chilling with family and friends today. Chef Afroza is planning to visit some food trucks around the Bay Area to sample & enjoy!
 Sat Feb 18 13:41:41 -0800 2012	@iamxande well I hope we can prove it sometime! Please tell the Mrs. I said thanks
 Sun Feb 19 19:59:05 -0800 2012	Hello Munchies, Schedule for the coming week: Tue: 45th & Doyle (Pixar);Wed: 65th & Hollis; Thu: Corporate Ctr Marin; Fri: Glacier Pt Marin!
-	Tue Feb 21 12:00:00 -0800 2012	45th & Doyle
-	Wed Feb 22 12:00:00 -0800 2012	65th & Hollis
+	Tue Feb 21 12:00:00 -0800 2012	45th & Doyle	geo
+	Wed Feb 22 12:00:00 -0800 2012	65th & Hollis	geo
 	Thu Feb 23 12:00:00 -0800 2012	Corporate Ctr Marin
-	Fri Feb 24 12:00:00 -0800 2012	Glacier Pt Marin
+	Fri Feb 24 12:00:00 -0800 2012	Glacier Pt Marin	geo
