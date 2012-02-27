@@ -55,8 +55,14 @@ class TimeParser
     end
   end
 
+  def self.get_timezone(time)
+    ActiveSupport::TimeZone[time.strftime("%z").to_i / 100]
+  end
+
   def self.parse_relative_time(phrase, created_at)
+    Chronic.time_class = get_timezone(created_at)
     time = parse_with_chronic(phrase, {:now => created_at, :ambiguous_time_range => 10})
+    
     if time.nil? && /lunch/i.match(phrase)
       time = created_at.clone.change({:hour => 12})
     elsif time.nil? && /dinner/i.match(phrase)
