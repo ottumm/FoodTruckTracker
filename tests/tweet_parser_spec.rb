@@ -7,7 +7,7 @@ require "#{File.dirname(__FILE__)}/../app/tweet_parser"
 describe "#parse_events" do
 	read_tweet_corpus.each do |test|
 		it "parses \"#{test[:created_at]} - #{test[:text]}\"" do
-			parsed = TweetParser.events test[:text], test[:created_at]
+			parsed = TweetParser.events test[:text], test[:created_at], "Pacific Time (US & Canada)"
 			test[:expected].map { |e| e.tap {|o| o.delete :geocode} }
 			
 			if parsed.length != test[:expected].length

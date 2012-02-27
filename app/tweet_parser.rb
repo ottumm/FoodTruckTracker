@@ -4,16 +4,16 @@ require "#{File.dirname(__FILE__)}/geo"
 require "#{File.dirname(__FILE__)}/time_parser"
 
 class TweetParser
-  def self.events(text, created_at)
+  def self.events(text, created_at, time_zone)
     normalized_text = normalize(text)
     events = []
     split_events(normalized_text).each do |event_text|
-      event = parse_time_and_location(event_text, created_at)
+      event = parse_time_and_location(event_text, created_at, time_zone)
       events.push(event) unless event.nil?
     end
 
     if events.empty?
-      event = parse_time_and_location(normalized_text, created_at)
+      event = parse_time_and_location(normalized_text, created_at, time_zone)
       events.push(event) unless event.nil?
     end
 
@@ -31,10 +31,10 @@ class TweetParser
     return ret
   end
 
-  def self.parse_time_and_location(text, created_at)
+  def self.parse_time_and_location(text, created_at, time_zone)
     loc_text = text.clone
     loc  = consume_location!(loc_text)
-    time = TimeParser.parse(loc_text, created_at)
+    time = TimeParser.parse(loc_text, created_at, time_zone)
     return nil if time.nil? || loc.nil?
     return {:time => time, :loc => loc}
   end

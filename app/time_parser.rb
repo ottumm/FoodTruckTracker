@@ -5,12 +5,15 @@ require 'active_support/core_ext/numeric/time'
 require 'active_support/time'
 
 class TimeParser
-  def self.parse(text, created_at)
+  def self.parse(text, created_at, time_zone)
+    Time.zone = ActiveSupport::TimeZone.new time_zone
+    Chronic.time_class = Time.zone
+
     composite_time = nil
     get_all_phrases(text).each do |phrase|
-      time = parse_relative_time(phrase, created_at)
+      time = parse_relative_time(phrase, created_at.in_time_zone)
       if !time.nil?
-        composite_time = combine_times(composite_time, time, created_at)
+        composite_time = combine_times(composite_time, time, created_at.in_time_zone)
       end
     end
 
@@ -55,12 +58,7 @@ class TimeParser
     end
   end
 
-  def self.get_timezone(time)
-    ActiveSupport::TimeZone[time.strftime("%z").to_i / 100]
-  end
-
   def self.parse_relative_time(phrase, created_at)
-    Chronic.time_class = get_timezone(created_at)
     time = parse_with_chronic(phrase, {:now => created_at, :ambiguous_time_range => 10})
     
     if time.nil? && /lunch/i.match(phrase)
