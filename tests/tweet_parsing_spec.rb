@@ -5,9 +5,11 @@ require "#{File.dirname(__FILE__)}/read_tweet_corpus"
 require "#{File.dirname(__FILE__)}/../app/tweet_parsing"
 
 describe "#parse_events" do
-	read_tweet_corpus.each do |test|		
+	read_tweet_corpus.each do |test|
 		it "parses \"#{test[:created_at]} - #{test[:text]}\"" do
-			parsed = parse_events(test[:text], test[:created_at])
+			parsed = parse_events test[:text], test[:created_at]
+			test[:expected].map { |e| e.tap {|o| o.delete :geocode} }
+			
 			if parsed.length != test[:expected].length
 				parsed.should =~ test[:expected]
 			else
