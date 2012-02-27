@@ -33,7 +33,7 @@ def timeline_to_ical(account, last_tweet_id, logger)
 
   fetch_tweets(account, last_tweet_id).each do |tweet|
     logger.log("@#{account}", tweet) unless logger.nil?
-    TweetParser.events(tweet.text, tweet.created_at, tweet.user.time_zone).each do |event|
+    TweetParser.events(tweet.text, tweet.created_at, tweet_timezone(tweet)).each do |event|
       puts "\t#{event[:time]}\t#{event[:loc]}"
       cal.event do
         dtstart     event[:time].to_datetime
@@ -46,6 +46,10 @@ def timeline_to_ical(account, last_tweet_id, logger)
   end
 
   return cal
+end
+
+def tweet_timezone(tweet)
+  return (tweet.user.time_zone or "Pacific Time (US & Canada)")
 end
 
 def tweet_url(tweet)
