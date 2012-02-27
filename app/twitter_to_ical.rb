@@ -4,7 +4,7 @@ require 'json'
 require 'optparse'
 require "#{File.dirname(__FILE__)}/ical"
 require "#{File.dirname(__FILE__)}/event_logger"
-require "#{File.dirname(__FILE__)}/tweet_parsing"
+require "#{File.dirname(__FILE__)}/tweet_parser"
 
 def main(options, feeds)
   logger = EventLogger.new

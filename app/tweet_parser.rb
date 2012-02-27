@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'twitter'
-require "#{File.dirname(__FILE__)}/geocoding"
-require "#{File.dirname(__FILE__)}/time_parsing"
+require "#{File.dirname(__FILE__)}/geo"
+require "#{File.dirname(__FILE__)}/time_parser"
 
 class TweetParser
   def self.events(text, created_at)

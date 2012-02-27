@@ -2,7 +2,7 @@ require 'rubygems'
 require 'bundler/setup'
 require 'rspec'
 require "#{File.dirname(__FILE__)}/read_tweet_corpus"
-require "#{File.dirname(__FILE__)}/../app/geocoding"
+require "#{File.dirname(__FILE__)}/../app/geo"
 
 near = "Emeryville, CA, USA"
 
