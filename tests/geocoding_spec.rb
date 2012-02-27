@@ -10,7 +10,7 @@ describe "#geocode" do
 	read_tweet_corpus.each do |test|
 		test[:expected].select {|e| !e[:geocode].nil?}.each do |event|
 			it "\"#{event[:loc]}\"" do
-				geo = geocode(event[:loc], :near => near)
+				geo = Geo.code(event[:loc], :near => near)
 				geo.should_not == nil
 
 				if event[:geo]
