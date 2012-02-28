@@ -1,6 +1,12 @@
 #! /bin/bash
 
-cd app
-ruby twitter_to_ical.rb -c food_trucks.json -o temp.ics
-ruby validate_ical.rb temp.ics && mv temp.ics /var/www/html/emeryville_food_trucks.ics
-date
+if [ ! -f lockfile ]
+	then
+		touch lockfile
+		cd app
+		ruby twitter_to_ical.rb -c food_trucks.json -o temp.ics
+		ruby validate_ical.rb temp.ics && mv temp.ics /var/www/html/emeryville_food_trucks.ics
+		date
+		cd ..
+		rm lockfile
+fi
