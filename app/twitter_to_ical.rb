@@ -9,29 +9,31 @@ require "#{File.dirname(__FILE__)}/tweet_parser"
 def main(options, feeds)
   logger = EventLogger.new
   filter = options[:filter]
-  last_tweet = options[:last_tweet]
   filtered_cal = create_calendar({ :name => options[:cal_name] })
   
   feeds.each do |feed|
-    merge_calendar_into!(filtered_cal, get_calendar(feed, filter, last_tweet, logger))
+    merge_calendar_into!(filtered_cal, get_calendar(feed, filter, logger))
   end
 
   ical_to_file(filtered_cal, options[:output])
   logger.write_to_dir(options[:tweet_dir])
 end
 
-def get_calendar(feed, filter, last_tweet, logger)
+def get_calendar(feed, filter, logger)
   twitter  = feed["twitter"]
   ical     = feed["ical"]
   name     = "@#{twitter}"
-  calendar = ical ? fixup_ical(fetch_ical(ical), name) : timeline_to_ical(twitter, last_tweet, logger)
+  calendar = ical ? fixup_ical(fetch_ical(ical), name) : timeline_to_ical(twitter, logger)
   return filter_ical(calendar, filter, name)
 end
 
-def timeline_to_ical(account, last_tweet_id, logger)
-  cal = create_calendar()
+def timeline_to_ical(account, logger)
+  cal = get_twitter_calendar account
+  last_tweet_id = get_last_tweet_id account
+  latest_tweet_id = 0
 
   fetch_tweets(account, last_tweet_id).each do |tweet|
+    latest_tweet_id = tweet.id if tweet.id > latest_tweet_id
     logger.log("@#{account}", tweet) unless logger.nil?
     TweetParser.events(tweet.text, tweet.created_at, tweet_timezone(tweet)).each do |event|
       puts "\t#{event[:time]}\t#{event[:loc]}"
@@ -45,8 +47,44 @@ def timeline_to_ical(account, last_tweet_id, logger)
     end
   end
 
+  if latest_tweet_id > 0
+    Dir.mkdir cals_dir unless Dir.exists? cals_dir
+    ical_to_file cal, twitter_calendar_path(account)
+    File.open(last_tweet_id_path(account), 'w') {|f| f.write latest_tweet_id}
+  end
+
   return cal
 end
+
+def get_last_tweet_id(account)
+  file = last_tweet_id_path account
+  if File.exists? file
+    return File.open(file).read
+  end
+
+  return nil
+end
+
+def cals_dir
+  return "cals"
+end
+
+def last_tweet_id_path(account)
+  return "#{cals_dir}/#{account}.tweet"
+end
+
+def twitter_calendar_path(account)
+  return "#{cals_dir}/#{account}.ics"
+end
+
+def get_twitter_calendar(account)
+  cal_file = twitter_calendar_path account
+  if File.exists? cal_file
+    return Icalendar::parse(File.open(cal_file).read).first
+  end
+
+  return create_calendar
+end    
 
 def tweet_timezone(tweet)
   return (tweet.user.time_zone or "Pacific Time (US & Canada)")
@@ -57,7 +95,7 @@ def tweet_url(tweet)
 end
 
 def fetch_tweets(account, since_id)
-  puts "Fetching timeline for @#{account}"
+  puts "Fetching timeline for @#{account} since #{since_id}"
   return Twitter.user_timeline(account, {:since_id => (since_id or 1)})
 end
 
@@ -68,7 +106,6 @@ optparse = OptionParser.new do |opts|
   opts.on("-o", "--output [FILE]",      "Output to iCal file") { |o| options[:output]     = o }
   opts.on("-f", "--filter [REGEX]",     "Filter by REGEX")     { |f| options[:filter]     = f }
   opts.on("-n", "--name [NAME]",        "Calendar name")       { |n| options[:cal_name]   = n }
-  opts.on("-t", "--last-tweet-id [ID]", "Last Tweet id")       { |t| options[:last_tweet] = t }
   opts.on("-d", "--tweet-dir [DIR]",    "Log tweets here")     { |d| options[:tweet_dir]  = d }
   opts.on("-h", "--help",               "Display this screen") { puts opts or exit }
 end.parse!
