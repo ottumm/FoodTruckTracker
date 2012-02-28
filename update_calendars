@@ -1,7 +1,8 @@
 #! /bin/bash
 
 date
+time bundle install
 cd app
-ruby twitter_to_ical.rb -c food_trucks.json -o temp.ics
+time ruby twitter_to_ical.rb -c food_trucks.json -o temp.ics
 ruby validate_ical.rb temp.ics && mv temp.ics /var/www/html/emeryville_food_trucks.ics
 date
