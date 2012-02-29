@@ -17,6 +17,9 @@ def main(options, feeds)
 
   ICal.to_file(filtered_cal, options[:output])
   logger.write_to_dir(options[:tweet_dir])
+  if logger.tweets.length > 0
+    File.open("log.txt", "a") {|f| f.puts "#{Time.now} : #{logger.tweets.length} new tweets"}
+  end
 end
 
 def get_calendar(feed, filter, logger)
@@ -34,7 +37,7 @@ def timeline_to_ical(account, logger)
 
   fetch_tweets(account, last_tweet_id).each do |tweet|
     latest_tweet_id = tweet.id if tweet.id > latest_tweet_id
-    logger.log("@#{account}", tweet) unless logger.nil?
+    logger.log("@#{account}", tweet)
     TweetParser.events(tweet.text, tweet.created_at, tweet_timezone(tweet)).each do |event|
       puts "\t#{event[:time]}\t#{event[:loc]}"
       cal.event do
