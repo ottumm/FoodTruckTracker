@@ -5,6 +5,7 @@ require 'optparse'
 require "#{File.dirname(__FILE__)}/ical"
 require "#{File.dirname(__FILE__)}/event_logger"
 require "#{File.dirname(__FILE__)}/tweet_parser"
+require "#{File.dirname(__FILE__)}/post_to_server"
 
 def main(options, feeds)
   logger = EventLogger.new
@@ -39,13 +40,20 @@ def timeline_to_ical(account, logger)
     latest_tweet_id = tweet.id if tweet.id > latest_tweet_id
     logger.log("@#{account}", tweet)
     TweetParser.events(tweet.text, tweet.created_at, tweet_timezone(tweet)).each do |event|
-      puts "\t#{event[:time]}\t#{event[:loc]}"
+      event[:name]          = "@#{tweet.user.screen_name}"
+      event[:end]           = event[:time] + 2.hours
+      event[:description]   = tweet.text
+      event[:creation_time] = tweet.created_at
+      event[:tweet_id]      = tweet.id
+
+      post_event_to_server "localhost:3000", event
+
       cal.event do
         dtstart     event[:time].to_datetime
-        dtend       (event[:time] + 2.hours).to_datetime
-        summary     "@#{tweet.user.screen_name}"
+        dtend       event[:end].to_datetime
+        summary     event[:name]
         location    event[:loc]
-        description "#{tweet.created_at} - #{tweet.text}\n#{tweet_url(tweet)}"
+        description "#{tweet.created_at} - #{event[:description]}\n#{tweet_url(tweet)}"
       end
     end
   end
