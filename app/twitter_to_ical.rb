@@ -9,13 +9,13 @@ require "#{File.dirname(__FILE__)}/tweet_parser"
 def main(options, feeds)
   logger = EventLogger.new
   filter = options[:filter]
-  filtered_cal = create_calendar({ :name => options[:cal_name] })
+  filtered_cal = ICal.create :name => options[:cal_name]
   
   feeds.each do |feed|
-    merge_calendar_into!(filtered_cal, get_calendar(feed, filter, logger))
+    ICal.merge_into!(filtered_cal, get_calendar(feed, filter, logger))
   end
 
-  ical_to_file(filtered_cal, options[:output])
+  ICal.to_file(filtered_cal, options[:output])
   logger.write_to_dir(options[:tweet_dir])
 end
 
@@ -23,8 +23,8 @@ def get_calendar(feed, filter, logger)
   twitter  = feed["twitter"]
   ical     = feed["ical"]
   name     = "@#{twitter}"
-  calendar = ical ? fixup_ical(fetch_ical(ical), name) : timeline_to_ical(twitter, logger)
-  return filter_ical(calendar, filter, name)
+  calendar = ical ? ICal.fixup(ICal.fetch(ical), name) : timeline_to_ical(twitter, logger)
+  return ICal.filter(calendar, filter, name)
 end
 
 def timeline_to_ical(account, logger)
@@ -49,7 +49,7 @@ def timeline_to_ical(account, logger)
 
   if latest_tweet_id > 0
     Dir.mkdir cals_dir unless Dir.exists? cals_dir
-    ical_to_file cal, twitter_calendar_path(account)
+    ICal.to_file cal, twitter_calendar_path(account)
     File.open(last_tweet_id_path(account), 'w') {|f| f.write latest_tweet_id}
   end
 
@@ -83,7 +83,7 @@ def get_twitter_calendar(account)
     return Icalendar::parse(File.open(cal_file).read).first
   end
 
-  return create_calendar
+  return ICal.create
 end    
 
 def tweet_timezone(tweet)
