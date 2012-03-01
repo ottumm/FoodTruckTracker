@@ -46,14 +46,20 @@ def timeline_to_ical(account, logger)
       event[:creation_time] = tweet.created_at
       event[:tweet_id]      = tweet.id
 
-      post_event_to_server "localhost:3000", event
+      geocode = Geo.code event[:loc], :near => "Emeryville, CA, USA"
+      if geocode
+        event[:latitude]          = geocode["geometry"]["location"]["lat"]
+        event[:longitude]         = geocode["geometry"]["location"]["lng"]
+        event[:formatted_address] = geocode["formatted_address"]
+        post_event_to_server "localhost:3000", event
 
-      cal.event do
-        dtstart     event[:time].to_datetime
-        dtend       event[:end].to_datetime
-        summary     event[:name]
-        location    event[:loc]
-        description "#{tweet.created_at} - #{event[:description]}\n#{tweet_url(tweet)}"
+        cal.event do
+          dtstart     event[:time].to_datetime
+          dtend       event[:end].to_datetime
+          summary     event[:name]
+          location    event[:loc]
+          description "#{tweet.created_at} - #{event[:description]}\n#{tweet_url(tweet)}"
+        end
       end
     end
   end
