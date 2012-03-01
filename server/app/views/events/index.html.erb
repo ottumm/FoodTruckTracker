@@ -4,10 +4,7 @@
   <tr>
     <th>Name</th>
     <th>Location</th>
-    <th>Latitude</th>
-    <th>Longitude</th>
-    <th>Start time</th>
-    <th>End time</th>
+    <th>Time</th>
     <th>Description</th>
     <th></th>
     <th></th>
@@ -17,12 +14,9 @@
 <% @events.each do |event| %>
   <tr>
     <td><%= event.name %></td>
-    <td><%= event.formatted_location %></td>
-    <td><%= event.latitude %></td>
-    <td><%= event.longitude %></td>
-    <td><%= event.start_time %></td>
-    <td><%= event.end_time %></td>
-    <td><%= event.description %></td>
+    <td><%= link_to event.location, event.google_maps_url %></td>
+    <td><%= event.formatted_start_time %></td>
+    <td><%= event.description %> <%= link_to event.formatted_created_at, event.tweet_url %></td>
   </tr>
 <% end %>
 </table>

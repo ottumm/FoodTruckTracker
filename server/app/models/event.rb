@@ -5,8 +5,22 @@ class Event < ActiveRecord::Base
 		where :start_time => (Time.now.beginning_of_day..Time.now.beginning_of_day + 1.day)
 	end
 
-	def formatted_location
-		"#{location} - #{formatted_address}"
+	def google_maps_url
+		"http://maps.google.com/maps?q=#{CGI::escape formatted_address}"
+	end
+
+	def formatted_start_time
+		Event.set_time_zone
+		start_time.strftime "%l:%M %P"
+	end
+
+	def formatted_created_at
+		Event.set_time_zone
+		created_at.strftime "%a %b %e %l:%M %P"
+	end
+
+	def tweet_url
+		"http://twitter.com/#{name}/status/#{tweet_id}"
 	end
 
 	protected
