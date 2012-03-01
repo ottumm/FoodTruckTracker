@@ -5,6 +5,10 @@ class Event < ActiveRecord::Base
 		where :start_time => (Time.now.beginning_of_day..Time.now.beginning_of_day + 1.day)
 	end
 
+	def formatted_location
+		"#{location} - #{formatted_address}"
+	end
+
 	protected
 
 	def self.set_time_zone

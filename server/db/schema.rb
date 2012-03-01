@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120229055342) do
+ActiveRecord::Schema.define(:version => 20120301065351) do
 
   create_table "events", :force => true do |t|
     t.string   "name"
@@ -21,10 +21,11 @@ ActiveRecord::Schema.define(:version => 20120229055342) do
     t.datetime "start_time"
     t.datetime "end_time"
     t.text     "description"
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
-    t.integer  "tweet_id",      :limit => 8
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
+    t.integer  "tweet_id",          :limit => 8
     t.datetime "creation_time"
+    t.string   "formatted_address"
   end
 
 end

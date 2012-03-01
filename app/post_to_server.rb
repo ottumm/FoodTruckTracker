@@ -8,6 +8,7 @@ def post_event_to_server(server, event)
 	RestClient.post(url,
 		"event[name]" => event[:name],
 		"event[location]" => event[:loc],
+		"event[formatted_address]" => event[:formatted_address],
 		"event[latitude]" => event[:latitude],
 		"event[longitude]" => event[:longitude],
 		"event[start_time]" => event[:time],
