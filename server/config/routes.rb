@@ -1,6 +1,4 @@
 Server::Application.routes.draw do
-  resources :events
-
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -50,7 +48,12 @@ Server::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  root :to => 'events#index'
+  root :to      => 'events#index'
+  get '/events' => 'events#index'
+
+  constraints :ip => /127.0.0.1/ do
+    resources :events
+  end
 
   # See how all your routes lay out with "rake routes"
 
