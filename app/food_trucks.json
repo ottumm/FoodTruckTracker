@@ -1,33 +1,18 @@
-{
-	"name"   : "Emeryville Food Trucks",
-	"filter" : "(hollis|doyle)",
+{ "name"   : "Emeryville Food Trucks", "filter" : "(hollis|doyle)",
 	"feeds" : [
-		{ 
-			"twitter" : "ebbettsgoodtogo"
-		},
-		{
-			"twitter" : "MunchIndia"
-		},
-		{
-			"twitter" : "vestaflatbread"
-		},
-		{
-			"twitter" : "docsofthebay"
-		},
-		{
-			"twitter" : "NicksBreakfast"
-		},
-		{
-			"twitter" : "cupkates"
-		},
-		{
-			"twitter" : "seoulonwheels"
-		},
-		{
-			"twitter" : "fivetenburger"
-		},
-		{
-			"twitter" : "libafalafel"
-		}
+		{ "twitter" : "ebbettsgoodtogo"	},
+		{ "twitter" : "MunchIndia" },
+		{ "twitter" : "vestaflatbread" },
+		{ "twitter" : "docsofthebay" },
+		{ "twitter" : "NicksBreakfast" },
+		{ "twitter" : "cupkates" },
+		{ "twitter" : "seoulonwheels" },
+		{ "twitter" : "fivetenburger" },
+		{ "twitter" : "libafalafel" },
+		{ "twitter" : "MoGoBBQ" },
+		{ "twitter" : "TheWOWTruck" },
+		{ "twitter" : "chowdermobile" },
+		{ "twitter" : "eatmobowl" },
+		{ "twitter" : "TikkaBytesTruck" }
 	]
 }
