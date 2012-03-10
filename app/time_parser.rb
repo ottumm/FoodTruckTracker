@@ -50,10 +50,6 @@ class TimeParser
     begin
       return Chronic.parse(*args)
     rescue NoMethodError => e
-      arg_string = args.map {|a| a.inspect}.join(", ")
-      $stderr.puts "Chronic.parse(#{arg_string})"
-      $stderr.puts e.message
-      $stderr.puts e.backtrace.map {|l| "\t#{l}"}
       return nil
     end
   end
