@@ -14,7 +14,7 @@ def post_event_to_server(server, event)
 		"event[start_time]" => event[:time],
 		"event[end_time]" => event[:end],
 		"event[description]" => event[:description],
-		"event[creation_time]" => event[:creation_time],
+		"event[created_at]" => event[:creation_time],
 		"event[tweet_id]" => event[:tweet_id],
 		"commit" => "Create Event")
 end
