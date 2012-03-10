@@ -1,5 +1,5 @@
 .DS_Store*
 tests/test_data/*
 ec2/*
-json/*
 .bundle/*
+app/cals/*
