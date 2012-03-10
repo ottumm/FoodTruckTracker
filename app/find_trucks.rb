@@ -5,6 +5,7 @@ require 'optparse'
 require "#{File.dirname(__FILE__)}/ical"
 require "#{File.dirname(__FILE__)}/event_logger"
 require "#{File.dirname(__FILE__)}/tweet_parser"
+require "#{File.dirname(__FILE__)}/geo"
 require "#{File.dirname(__FILE__)}/post_to_server"
 
 def main(options, feeds)

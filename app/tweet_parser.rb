@@ -1,7 +1,5 @@
-require 'rubygems'
-require 'twitter'
-require "#{File.dirname(__FILE__)}/geo"
 require "#{File.dirname(__FILE__)}/time_parser"
+require "#{File.dirname(__FILE__)}/location_parser"
 
 class TweetParser
   def self.events(text, created_at, time_zone)
@@ -33,39 +31,13 @@ class TweetParser
   end
 
   def self.parse_time_and_location(text, created_at, time_zone)
-    loc_text = text.clone
-    loc  = consume_location!(loc_text)
-    time = TimeParser.parse(loc_text, created_at, time_zone)
-    return nil if time.nil? || loc.nil?
-    return {:time => time, :loc => loc}
+    loc  = LocationParser.parse text
+    time = TimeParser.parse loc[:remaining], created_at, time_zone
+    return nil if time.nil? || loc[:loc].nil?
+    return {:time => time, :loc => loc[:loc]}
   end
 
   def self.split_events(text)
     return text.split(/[,;\.\!]/i)
-  end
-
-  def self.consume_location!(text)
-    time         = '\d\d?(?:\d\d)?(?:am?|pm?)'
-    time_range   = "#{time}-#{time}"
-    loc_prefix   = "(?:@|at\\s|on\\s|[:\\.]\\s+)"
-    intersection = '[^\s,\.]+(?: and | ?& ?| ?\/ ?)[^\s,\.]+'
-    address      = '\d{1,4} [a-z]+ [a-z]+'
-    loc_suffix   = "(?: ?#{time_range}|[,\\.]| ?from).*"
-
-    [
-      /(#{address})/i,
-      /(#{intersection})/i,
-      /#{loc_prefix}(.*)/i
-    ].each do |pattern|
-      match = pattern.match(text)
-      if !match.nil? && !match[1].nil?
-        loc = match[1]
-        loc.gsub! /#{loc_suffix}/i, ""
-        text.gsub!(Regexp.compile(Regexp.escape(loc)), "")
-        return loc
-      end
-    end
-
-    return nil
   end
 end

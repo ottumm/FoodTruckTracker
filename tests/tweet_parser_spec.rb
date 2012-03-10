@@ -25,7 +25,7 @@ describe "#parse_locations" do
 	read_locations_corpus.each do |test|
 		it "parses \"#{test[:text]}\"" do
 			normalized = TweetParser.normalize test[:text]
-			TweetParser.consume_location!(normalized).should == test[:loc]
+			LocationParser.parse(normalized)[:loc].should == test[:loc]
 		end
 	end
 end
