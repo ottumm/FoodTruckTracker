@@ -1,8 +1,18 @@
+require 'haversine_distance'
+
 class Event < ActiveRecord::Base
+	attr_accessor :distance
 
 	def self.find_today
 		set_time_zone
-		where :start_time => (Time.now.beginning_of_day..Time.now.beginning_of_day + 1.day)
+		where(:start_time => (Time.now.beginning_of_day..Time.now.beginning_of_day + 1.day)).order :start_time
+	end
+
+	def self.find_nearby loc, range
+		find_today.select do |event|
+			event.distance = haversine_distance(loc, {:lat => event[:latitude], :long => event[:longitude]})
+			event.distance < range
+		end.sort {|a, b| a.distance <=> b.distance}
 	end
 
 	def google_maps_url
@@ -17,6 +27,14 @@ class Event < ActiveRecord::Base
 	def formatted_created_at
 		Event.set_time_zone
 		created_at.strftime "%a %b %e %l:%M %P"
+	end
+
+	def formatted_distance
+		if distance
+			"%.1f km" % distance
+		else
+			"n/a"
+		end
 	end
 
 	def tweet_url

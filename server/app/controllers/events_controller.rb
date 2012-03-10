@@ -2,7 +2,11 @@ class EventsController < ApplicationController
   # GET /events
   # GET /events.json
   def index
-    @events = Event.find_today
+    if params[:lat] && params[:long] && params[:range]
+      @events = Event.find_nearby({:lat => params[:lat].to_f, :long => params[:long].to_f}, params[:range].to_f)
+    else
+      @events = Event.find_today
+    end
 
     respond_to do |format|
       format.html # index.html.erb
