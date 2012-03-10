@@ -5,7 +5,7 @@ require "#{File.dirname(__FILE__)}/time_parser"
 
 class TweetParser
   def self.events(text, created_at, time_zone)
-    normalized_text = normalize(text)
+    normalized_text = normalize text
     events = []
     split_events(normalized_text).each do |event_text|
       event = parse_time_and_location(event_text, created_at, time_zone)
