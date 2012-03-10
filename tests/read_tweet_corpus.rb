@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'bundler/setup'
+require 'json'
 require 'active_support/core_ext/numeric/time'
 require 'active_support/time'
 
@@ -23,4 +24,10 @@ def read_tweet_corpus
 		corpus.push(status.clone) unless status[:expected].empty?
 	end
 	return corpus
+end
+
+def read_locations_corpus
+	JSON.parse(File.open("#{File.dirname(__FILE__)}/expected-locations.json").read).map do |entry|
+		{:text => entry["text"], :loc => entry["loc"]}
+	end
 end

@@ -27,6 +27,7 @@ class TweetParser
 
     ret = text.clone
     ret.gsub! /(#{day_of_week})\./i, '\1:'
+    ret.gsub! /https?:\/\/[^ ]*/, ''
     ret.gsub! /([a-z]):([^ ])/i, '\1: \2'
     return ret
   end
