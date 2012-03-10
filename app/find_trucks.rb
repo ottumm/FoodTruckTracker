@@ -13,7 +13,7 @@ def main(options, feeds)
   filtered_cal = ICal.create :name => options[:cal_name]
   
   feeds.each do |feed|
-    ICal.merge_into!(filtered_cal, get_calendar(feed, filter, logger))
+    ICal.merge_into!(filtered_cal, get_calendar(feed, filter, logger, options[:server]))
   end
 
   ICal.to_file(filtered_cal, options[:output])
@@ -23,15 +23,15 @@ def main(options, feeds)
   end
 end
 
-def get_calendar(feed, filter, logger)
+def get_calendar(feed, filter, logger, server)
   twitter  = feed["twitter"]
   ical     = feed["ical"]
   name     = "@#{twitter}"
-  calendar = ical ? ICal.fixup(ICal.fetch(ical), name) : timeline_to_ical(twitter, logger)
+  calendar = ical ? ICal.fixup(ICal.fetch(ical), name) : timeline_to_ical(twitter, logger, server)
   return ICal.filter(calendar, filter, name)
 end
 
-def timeline_to_ical(account, logger)
+def timeline_to_ical(account, logger, server)
   cal = get_twitter_calendar account
   last_tweet_id = get_last_tweet_id account
   latest_tweet_id = 0
@@ -51,7 +51,7 @@ def timeline_to_ical(account, logger)
         event[:latitude]          = geocode["geometry"]["location"]["lat"]
         event[:longitude]         = geocode["geometry"]["location"]["lng"]
         event[:formatted_address] = geocode["formatted_address"]
-        post_event_to_server "localhost:3000", event
+        post_event_to_server server, event
 
         cal.event do
           dtstart     event[:time].to_datetime
@@ -119,18 +119,19 @@ end
 options = {}
 optparse = OptionParser.new do |opts|
   opts.banner = "Usage: twitter_to_ical.rb [options...]"
-  opts.on("-c", "--config FILE",        "Config file")         { |c| options[:config]     = c }
-  opts.on("-o", "--output [FILE]",      "Output to iCal file") { |o| options[:output]     = o }
-  opts.on("-f", "--filter [REGEX]",     "Filter by REGEX")     { |f| options[:filter]     = f }
-  opts.on("-n", "--name [NAME]",        "Calendar name")       { |n| options[:cal_name]   = n }
-  opts.on("-d", "--tweet-dir [DIR]",    "Log tweets here")     { |d| options[:tweet_dir]  = d }
-  opts.on("-h", "--help",               "Display this screen") { puts opts or exit }
+  opts.on("-c", "--config [FILE]",   "Config file")         { |c| options[:config]     = c }
+  opts.on("-o", "--cal [FILE]",      "Output to iCal file") { |o| options[:output]     = o }
+  opts.on("-f", "--filter [REGEX]",  "Filter by REGEX")     { |f| options[:cal_filter] = f }
+  opts.on("-n", "--name [NAME]",     "Calendar name")       { |n| options[:cal_name]   = n }
+  opts.on("-d", "--tweet-dir [DIR]", "Log tweets here")     { |d| options[:tweet_dir]  = d }
+  opts.on("-s", "--server [URL]",    "POST tweets here")    { |s| options[:server]     = s }
+  opts.on("-h", "--help",            "Display this screen") { puts opts or exit }
 end.parse!
 
-raise OptionParser::MissingArgument if options[:config].nil?
+options[:config]     = "find_trucks.config" unless options[:config]
+c = JSON.parse(File.open(options[:config], "r").read)
+options[:cal_name]   = c["cal"]["name"]     unless options[:cal_name]
+options[:cal_filter] = c["cal"]["filter"]   unless options[:cal_filter]
+options[:server]     = c["server"]          unless options[:server]
 
-config = JSON.parse(File.open(options[:config], "r").read)
-options[:cal_name] = config["name"]   if options[:cal_name].nil?
-options[:filter]   = config["filter"] if options[:filter].nil?
-
-main(options, config["feeds"])
+main(options, c["feeds"])
