@@ -169,3 +169,5 @@ Sun Feb 19 19:59:05 -0800 2012	Hello Munchies, Schedule for the coming week: Tue
 	Wed Feb 22 12:00:00 -0800 2012	65th & Hollis	geo
 	Thu Feb 23 12:00:00 -0800 2012	Corporate Ctr Marin
 	Fri Feb 24 12:00:00 -0800 2012	Glacier Pt Marin	geo
+Fri Mar 9 11:43:00 -0800 2012	We are in South San Francisco and doors are up! Come out to 901 Gateway Blvd, we will be out til 130pm! Let's MoGo! =)
+	Fri Mar 9 13:30:00 -0800 2012	901 Gateway Blvd

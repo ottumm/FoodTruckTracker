@@ -49,9 +49,11 @@ class TweetParser
     time_range   = "#{time}-#{time}"
     loc_prefix   = "(?:@|at\\s|on\\s|[:\\.]\\s+)"
     intersection = '[^\s,\.]+(?: and | ?& ?| ?\/ ?)[^\s,\.]+'
+    address      = '\d{1,4} [a-z]+ [a-z]+'
     loc_suffix   = "(?: ?#{time_range}|[,\\.]| ?from).*"
 
     [
+      /(#{address})/i,
       /(#{intersection})/i,
       /#{loc_prefix}(.*)/i
     ].each do |pattern|
