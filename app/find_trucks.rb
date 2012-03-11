@@ -98,7 +98,12 @@ end
 def get_twitter_calendar(account)
   cal_file = twitter_calendar_path account
   if File.exists? cal_file
-    return Icalendar::parse(File.open(cal_file).read).first
+    begin
+      return Icalendar::parse(File.open(cal_file).read).first
+    rescue Exception => e
+      $stderr.puts e.message
+      $stderr.puts e.backtrace.map {|l| "\t#{l}"}
+    end
   end
 
   return ICal.create
@@ -119,7 +124,7 @@ end
 
 options = {}
 optparse = OptionParser.new do |opts|
-  opts.banner = "Usage: twitter_to_ical.rb [options...]"
+  opts.banner = "Usage: find_trucks.rb [options...]"
   opts.on("-c", "--config [FILE]",   "Config file")         { |c| options[:config]     = c }
   opts.on("-o", "--cal [FILE]",      "Output to iCal file") { |o| options[:output]     = o }
   opts.on("-f", "--filter [REGEX]",  "Filter by REGEX")     { |f| options[:cal_filter] = f }
