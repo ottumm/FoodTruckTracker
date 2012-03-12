@@ -10,7 +10,7 @@ require "#{File.dirname(__FILE__)}/post_to_server"
 
 def main(options, feeds)
   logger = EventLogger.new
-  filter = options[:filter]
+  filter = options[:cal_filter]
   filtered_cal = ICal.create :name => options[:cal_name]
   
   feeds.each do |feed|
