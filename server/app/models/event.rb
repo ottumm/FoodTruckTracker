@@ -4,13 +4,12 @@ require 'twitter'
 class Event < ActiveRecord::Base
 	attr_accessor :distance
 
-	def self.find_today
-		set_time_zone
-		where(:start_time => (Time.now.beginning_of_day..Time.now.beginning_of_day + 1.day)).order :start_time
+	def self.find_today time_zone
+		where(:start_time => today(time_zone)).order :start_time
 	end
 
-	def self.find_nearby loc, range
-		find_today.select do |event|
+	def self.find_nearby loc, range, time_zone
+		find_today(time_zone).select do |event|
 			event.distance = haversine_distance(loc, {:lat => event[:latitude], :long => event[:longitude]})
 			event.distance < range
 		end.sort {|a, b| a.distance <=> b.distance}
@@ -21,12 +20,10 @@ class Event < ActiveRecord::Base
 	end
 
 	def formatted_start_time
-		Event.set_time_zone
 		start_time.strftime "%l:%M %P"
 	end
 
 	def formatted_created_at
-		Event.set_time_zone
 		created_at.strftime "%a %b %e %l:%M %P"
 	end
 
@@ -50,7 +47,8 @@ class Event < ActiveRecord::Base
 
 	protected
 
-	def self.set_time_zone
-		Time.zone = "Pacific Time (US & Canada)"
+	def self.today time_zone
+		now = Time.now.in_time_zone time_zone
+		now.beginning_of_day..now.beginning_of_day + 1.day
 	end
 end
