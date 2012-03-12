@@ -1,24 +1,21 @@
-<h1>Food trucks near you</h1>
-
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Location</th>
-    <th>Distance</th>
-    <th>Time</th>
-    <th>Description</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @events.each do |event| %>
-  <tr>
-    <td><%= event.name %></td>
-    <td><%= link_to event.location, event.google_maps_url %></td>
-    <td><%= event.formatted_distance %></td>
-    <td><%= event.formatted_start_time %></td>
-    <td><%= event.description %> <%= link_to event.formatted_created_at, event.tweet_url %></td>
-  </tr>
-<% end %>
-</table>
+<div class="events container">
+  <% @events.each do |event| %>
+    <div class="event row">
+      <%= image_tag event.profile_image_url, :class => "event-avatar span1", :alt => "Avatar" %>
+      <div class="event-inner span11">
+        <div class="event-information">
+          <span class="event-name"><%= event.name %></span>
+          -
+          <span class="event-details">
+            <%= link_to event.location, event.google_maps_url %>
+            at
+            <%= event.formatted_start_time %>
+          </span>
+        </div>
+        <div class="event-tweet">
+          <%= event.description %> <%= link_to event.formatted_created_at, event.tweet_url %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
