@@ -38,7 +38,7 @@ def timeline_to_ical(account, logger, server)
   latest_tweet_id = 0
 
   fetch_tweets(account, last_tweet_id).each do |tweet|
-    latest_tweet_id = tweet.id if tweet.id > latest_tweet_id
+    latest_tweet_id = tweet.id unless tweet.id < latest_tweet_id
     logger.log("@#{account}", tweet)
     TweetParser.events(tweet.text, tweet.created_at, tweet_timezone(tweet)).each do |event|
       event[:name]          = "@#{tweet.user.screen_name}"
