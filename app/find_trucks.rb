@@ -102,8 +102,7 @@ def get_twitter_calendar(name)
     begin
       return Icalendar::parse(File.open(cal_file).read).first
     rescue Exception => e
-      $stderr.puts e.message
-      $stderr.puts e.backtrace.map {|l| "\t#{l}"}
+      $stderr.puts "#{e.message} in #{cal_file}"
     end
   end
 
