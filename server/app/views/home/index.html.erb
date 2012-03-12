@@ -4,8 +4,10 @@
 
 <script>
 	function success(pos) {
-		$("#location").replaceWith("Latitude: " + pos.coords.latitude + " Longitude: " + pos.coords.longitude);
-		window.location.href = "/events?lat=" + pos.coords.latitude + "&long=" + pos.coords.longitude + "&range=10";
+		window.location.href = "/events?lat=" + pos.coords.latitude 
+		                     + "&long=" + pos.coords.longitude 
+		                     + "&range=10"
+		                     + "&tz=" + new Date().getTimezoneOffset();
 	}
 
 	function error(error) {

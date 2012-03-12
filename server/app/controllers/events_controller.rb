@@ -2,10 +2,19 @@ class EventsController < ApplicationController
   # GET /events
   # GET /events.json
   def index
-    if params[:lat] && params[:long] && params[:range]
-      @events = Event.find_nearby({:lat => params[:lat].to_f, :long => params[:long].to_f}, params[:range].to_f)
+    lat = params[:lat].to_f unless params[:lat].nil?
+    long = params[:long].to_f unless params[:long].nil?
+    range = params[:range].to_f unless params[:range].nil?
+    if params[:tz].nil?
+      time_zone = "Pacific Time (US & Canada)"
     else
-      @events = Event.find_today
+      time_zone = ActiveSupport::TimeZone[params[:tz].to_i]
+    end
+
+    if lat && long && range
+      @events = Event.find_nearby({:lat => lat, :long => long}, range, time_zone)
+    else
+      @events = Event.find_today(time_zone)
     end
 
     respond_to do |format|
