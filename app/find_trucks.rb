@@ -12,9 +12,10 @@ def main(options, lists)
   logger = EventLogger.new
   filter = options[:cal_filter]
   filtered_cal = ICal.create :name => options[:cal_name]
+  already_seen = Set.new
   
   lists.each do |list|
-    ICal.merge_into!(filtered_cal, get_calendar(list, filter, logger, options[:server]))
+    ICal.merge_into!(filtered_cal, get_calendar(list, filter, logger, options[:server], already_seen))
   end
 
   ICal.to_file(filtered_cal, options[:output])
@@ -28,17 +29,22 @@ def get_list_name(list)
   "#{list['user']}-#{list['name']}"
 end
 
-def get_calendar(list, filter, logger, server)
-  calendar = timeline_to_ical list, logger, server
+def get_calendar(list, filter, logger, server, already_seen)
+  calendar = timeline_to_ical list, logger, server, already_seen
   ICal.filter calendar, filter, get_list_name(list)
 end
 
-def timeline_to_ical(list, logger, server)
+def timeline_to_ical(list, logger, server, already_seen)
   cal = get_twitter_calendar list
   last_tweet_id = get_last_tweet_id list
   latest_tweet_id = 0
 
   fetch_tweets(list, last_tweet_id).each do |tweet|
+    if already_seen.include? tweet.id
+      next
+    end
+
+    already_seen.add tweet.id
     latest_tweet_id = tweet.id unless tweet.id < latest_tweet_id
     logger.log(tweet.user.screen_name, tweet)
     TweetParser.events(tweet.text, tweet.created_at, tweet_timezone(tweet)).each do |event|
