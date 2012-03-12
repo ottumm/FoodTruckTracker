@@ -2,10 +2,13 @@ require 'haversine_distance'
 require 'twitter'
 
 class Event < ActiveRecord::Base
-	attr_accessor :distance
+	attr_accessor :distance, :time_zone
 
 	def self.find_today time_zone, date
-		where(:start_time => today(time_zone, date)).order :start_time
+		where(:start_time => today(time_zone, date)).order(:start_time).map do |event|
+			event.time_zone = time_zone
+			event
+		end
 	end
 
 	def self.find_nearby loc, range, time_zone
@@ -20,11 +23,11 @@ class Event < ActiveRecord::Base
 	end
 
 	def formatted_start_time
-		start_time.strftime "%l:%M %P"
+		start_time.in_time_zone(time_zone).strftime "%l:%M %P"
 	end
 
 	def formatted_created_at
-		created_at.strftime "%a %b %e %l:%M %P"
+		created_at.in_time_zone(time_zone).strftime "%a %b %e %l:%M %P"
 	end
 
 	def formatted_distance
