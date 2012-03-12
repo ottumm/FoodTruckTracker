@@ -1,4 +1,5 @@
 require 'haversine_distance'
+require 'twitter'
 
 class Event < ActiveRecord::Base
 	attr_accessor :distance
@@ -39,6 +40,16 @@ class Event < ActiveRecord::Base
 
 	def tweet_url
 		"http://twitter.com/#{name}/status/#{tweet_id}"
+	end
+
+	def profile_image_url
+		if profile_image.nil?
+			logger.debug "Fetching profile image url for #{name}"
+			self.profile_image = Twitter.user(name).profile_image_url
+			self.save
+		end
+
+		profile_image
 	end
 
 	protected
