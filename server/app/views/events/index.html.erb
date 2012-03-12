@@ -7,7 +7,10 @@
           <span class="event-name"><%= event.name %></span>
           -
           <span class="event-details">
-            <%= link_to event.location, event.google_maps_url %>
+            <%= link_to event.location, event.google_maps_url %> 
+            <% if event.distance %>
+              (<%= event.formatted_distance %> away)
+            <% end %>
             at
             <%= event.formatted_start_time %>
           </span>
