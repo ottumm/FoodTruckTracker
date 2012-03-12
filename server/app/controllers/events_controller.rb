@@ -14,7 +14,7 @@ class EventsController < ApplicationController
     if lat && long && range
       @events = Event.find_nearby({:lat => lat, :long => long}, range, time_zone)
     else
-      @events = Event.find_today(time_zone)
+      @events = Event.find_today(time_zone, params[:date])
     end
 
     respond_to do |format|

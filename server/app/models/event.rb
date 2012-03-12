@@ -4,12 +4,12 @@ require 'twitter'
 class Event < ActiveRecord::Base
 	attr_accessor :distance
 
-	def self.find_today time_zone
-		where(:start_time => today(time_zone)).order :start_time
+	def self.find_today time_zone, date
+		where(:start_time => today(time_zone, date)).order :start_time
 	end
 
 	def self.find_nearby loc, range, time_zone
-		find_today(time_zone).select do |event|
+		find_today(time_zone, nil).select do |event|
 			event.distance = haversine_distance(loc, {:lat => event[:latitude], :long => event[:longitude]})
 			event.distance < range
 		end.sort {|a, b| a.distance <=> b.distance}
@@ -47,8 +47,12 @@ class Event < ActiveRecord::Base
 
 	protected
 
-	def self.today time_zone
-		now = Time.now.in_time_zone time_zone
+	def self.today time_zone, date
+		if date
+			now = Date.parse(date).to_time
+		else
+			now = Time.now.in_time_zone time_zone
+		end
 		now.beginning_of_day..now.beginning_of_day + 1.day
 	end
 end
