@@ -2,6 +2,8 @@ class EventsController < ApplicationController
   # GET /events
   # GET /events.json
   def index
+    cookies[:id] = SecureRandom.hex(10) unless cookies[:id]
+
     lat = params[:lat].to_f unless params[:lat].nil?
     long = params[:long].to_f unless params[:long].nil?
     range = params[:range].to_f unless params[:range].nil?
@@ -12,6 +14,7 @@ class EventsController < ApplicationController
     end
 
     if lat && long && range
+      save_request params[:lat], params[:long], cookies[:id]
       @events = Event.find_nearby({:lat => lat, :long => long}, range, time_zone)
     else
       @events = Event.find_today(time_zone, params[:date])
@@ -21,6 +24,11 @@ class EventsController < ApplicationController
       format.html # index.html.erb
       format.json { render json: @events }
     end
+  end
+
+  def save_request latitude, longitude, client_id
+    @request = Request.new({:latitude => latitude, :longitude => longitude, :client_id => client_id})
+    @request.save or logger.warn "Error saving client request: #{@request.errors}"
   end
 
   # GET /events/1
