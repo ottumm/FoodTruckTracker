@@ -31,11 +31,7 @@ class Event < ActiveRecord::Base
 	end
 
 	def formatted_distance
-		if distance
-			"%.1f km" % distance
-		else
-			"n/a"
-		end
+		if distance then "%.1f km" % distance else "n/a" end
 	end
 
 	def tweet_url
