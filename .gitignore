@@ -2,5 +2,4 @@
 tests/test_data/*
 ec2/*
 .bundle/*
-app/cals/*
-app/log.txt
+truckfinder/data/*
