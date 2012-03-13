@@ -171,3 +171,10 @@ Sun Feb 19 19:59:05 -0800 2012	Hello Munchies, Schedule for the coming week: Tue
 	Fri Feb 24 12:00:00 -0800 2012	Glacier Pt Marin	geo
 Fri Mar 9 11:43:00 -0800 2012	We are in South San Francisco and doors are up! Come out to 901 Gateway Blvd, we will be out til 130pm! Let's MoGo! =)
 	Fri Mar 9 13:30:00 -0800 2012	901 Gateway Blvd
+Sun Mar 11 22:34:34 +0000 2012	Thanks for showing the love in the Laurel district today in SF at @JCCSF! See the rest of youz in Emeryville tomorrow, 64th/Hollis 11:30-2
+	Sun Mar 11 12:00:00 -0800 2012	@JCCSF
+	Mon Mar 12 12:00:00 -0800 2012	64th/Hollis	geo
+Sun Feb 12 12:35:00 -0800 2012	Schedule: WED 64th&Hollis lunch, N. Berkeley dinner; THURS 2100 Powell Eville; FRI SF Civic Ctr. Yes in pickles and Roast Beef! #fb
+	Wed Feb 15 12:00:00 -0800 2012	64th&Hollis	geo
+	Thu Feb 16 12:00:00 -0800 2012	2100 Powell Eville
+	Fri Feb 17 12:00:00 -0800 2012	SF Civic Ctr

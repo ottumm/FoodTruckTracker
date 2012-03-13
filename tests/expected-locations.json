@@ -1,4 +1,12 @@
 [
 	{ "text" : "Don't forget to pick up one of these babies tonight! Let's MoGo! http://t.co/pZcb1kt2",
+	  "loc"  : null },
+	{ "text" : "The garage door is still broken. We'll be at our Market St. spot by noon today.",
+	  "loc"  : "Market St." },
+	{ "text" : "Hey! The schedule is up and we are slingin' on St Mary's square! Now til 2:00....come over for yours",
+	  "loc"  : "St Mary's square" },
+	{ "text" : "FiDu come on down! OtG: St. Mary's Square is on today from 11am to 2pm. Grab your bite of @3sumeats... http://t.co/D8xBH5JR",
+	  "loc"  : "St. Mary's Square" },
+	{ "text" : "Recipe a day, until St. Patrick's Day . . . http://t.co/labU7Ze9",
 	  "loc"  : null }
 ]
