@@ -21,7 +21,7 @@ def main(options, lists)
   ICal.to_file(filtered_cal, options[:output])
   logger.write_to_dir(options[:tweet_dir])
   if logger.tweets.length > 0
-    File.open("log.txt", "a") {|f| f.puts "#{Time.now} : #{logger.tweets.length} new tweets"}
+    File.open("data/log.txt", "a") {|f| f.puts "#{Time.now} : #{logger.tweets.length} new tweets"}
   end
 end
 
@@ -91,7 +91,7 @@ def get_last_tweet_id(list)
 end
 
 def cals_dir
-  return "cals"
+  return "data"
 end
 
 def last_tweet_id_path(name)
