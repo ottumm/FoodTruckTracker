@@ -1,5 +1,5 @@
 .DS_Store*
-tests/test_data/*
 ec2/*
 .bundle/*
 truckfinder/data/*
+truckfinder/test/test_data/*

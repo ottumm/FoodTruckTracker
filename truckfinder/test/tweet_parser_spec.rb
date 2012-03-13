@@ -1,8 +1,8 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'rspec'
-require "#{File.dirname(__FILE__)}/read_tweet_corpus"
-require "#{File.dirname(__FILE__)}/../app/tweet_parser"
+require "./read_tweet_corpus"
+require "../tweet_parser"
 
 describe "#parse_events" do
 	read_tweet_corpus.each do |test|
