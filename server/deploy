@@ -1,0 +1,25 @@
+#!/bin/bash
+USER=ec2-user
+REPOS=git@github.com:ottumm/FoodTruckTracker.git
+CD_ROOT="cd FoodTruckTracker"
+CD_SERVER="cd FoodTruckTracker/server"
+
+if [[ $1 = "production" ]]; then
+	SERVER=eat-mobile.com
+else
+	SERVER=ec2-107-20-30-178.compute-1.amazonaws.com
+fi
+
+SSH="ssh $USER@$SERVER"
+
+set -x
+
+$SSH -t "sudo service httpd stop"
+$SSH "[ ! -d FoodTruckTracker ] && git clone $REPOS"
+$SSH "$CD_ROOT && git pull"
+$SSH "$CD_SERVER && bundle install"
+$SSH "$CD_SERVER && bundle exec rake db:migrate RAILS_ENV=production"
+$SSH "$CD_SERVER && bundle exec rake assets:precompile"
+cat config/httpd.conf | $SSH "cat - > ~/httpd.conf"
+$SSH -t "sudo mv ~/httpd.conf /etc/httpd/conf/httpd.conf"
+$SSH -t "sudo service httpd start"
