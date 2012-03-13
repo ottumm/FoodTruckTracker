@@ -11,22 +11,24 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120312074516) do
+ActiveRecord::Schema.define(:version => 20120313031910) do
 
   create_table "events", :force => true do |t|
-    t.string   "name"
     t.string   "location"
     t.float    "latitude"
     t.float    "longitude"
     t.datetime "start_time"
     t.datetime "end_time"
-    t.text     "description"
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
-    t.integer  "tweet_id",          :limit => 8
-    t.datetime "creation_time"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
     t.string   "formatted_address"
-    t.string   "profile_image"
+  end
+
+  create_table "notifications", :force => true do |t|
+    t.integer  "tweet_id"
+    t.integer  "event_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "requests", :force => true do |t|
@@ -35,6 +37,15 @@ ActiveRecord::Schema.define(:version => 20120312074516) do
     t.float    "longitude"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "tweets", :force => true do |t|
+    t.string   "text"
+    t.datetime "timestamp"
+    t.string   "profile_image"
+    t.string   "user"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
 end

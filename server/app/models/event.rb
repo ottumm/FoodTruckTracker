@@ -1,12 +1,18 @@
 require 'haversine_distance'
-require 'twitter'
 
 class Event < ActiveRecord::Base
+	has_many :notifications
+	has_many :tweets, :through => :notifications
+
 	attr_accessor :distance, :time_zone
 
 	def self.find_today time_zone, date
 		where(:start_time => today(time_zone, date)).order(:start_time).map do |event|
 			event.time_zone = time_zone
+			event.tweets.map do |tweet|
+				tweet.time_zone = time_zone
+				tweet
+			end
 			event
 		end
 	end
@@ -18,7 +24,7 @@ class Event < ActiveRecord::Base
 		end.sort {|a, b| a.distance <=> b.distance}
 	end
 
-	def google_maps_url
+	def map_url
 		"http://maps.google.com/maps?q=#{CGI::escape formatted_address}"
 	end
 
@@ -26,26 +32,16 @@ class Event < ActiveRecord::Base
 		start_time.in_time_zone(time_zone).strftime "%l:%M %P"
 	end
 
-	def formatted_created_at
-		created_at.in_time_zone(time_zone).strftime "%a %b %e %l:%M %P"
-	end
-
 	def formatted_distance
 		if distance then "%.1f km" % distance else "n/a" end
 	end
 
-	def tweet_url
-		"http://twitter.com/#{name}/status/#{tweet_id}"
+	def avatar_url
+		tweets.first.profile_image_url
 	end
 
-	def profile_image_url
-		if profile_image.nil?
-			logger.debug "Fetching profile image url for #{name}"
-			self.profile_image = Twitter.user(name).profile_image_url
-			self.save
-		end
-
-		profile_image
+	def title
+		tweets.first.user
 	end
 
 	protected

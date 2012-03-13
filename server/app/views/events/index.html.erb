@@ -1,13 +1,13 @@
 <div class="events container-fluid">
   <% @events.each do |event| %>
     <div class="event row-fluid">
-      <%= image_tag event.profile_image_url, :class => "event-avatar span1", :alt => "Avatar" %>
+      <%= image_tag event.avatar_url, :class => "event-avatar span1", :alt => "Avatar" %>
       <div class="event-inner span11">
         <div class="event-information">
-          <span class="event-name"><%= event.name %></span>
+          <span class="event-name"><%= event.title %></span>
           -
           <span class="event-details">
-            <%= link_to event.location, event.google_maps_url %> 
+            <%= link_to event.location, event.map_url %> 
             <% if event.distance %>
               (<%= event.formatted_distance %> away)
             <% end %>
@@ -16,7 +16,7 @@
           </span>
         </div>
         <div class="event-tweet">
-          <%= event.description %> <%= link_to event.formatted_created_at, event.tweet_url %>
+          <%= event.tweets.first.text %> <%= link_to event.tweets.first.formatted_timestamp, event.tweets.first.url %>
         </div>
       </div>
     </div>

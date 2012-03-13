@@ -59,7 +59,7 @@ def timeline_to_ical(list, logger, server, already_seen)
         event[:latitude]          = geocode["geometry"]["location"]["lat"]
         event[:longitude]         = geocode["geometry"]["location"]["lng"]
         event[:formatted_address] = geocode["formatted_address"]
-        post_event_to_server server, event
+        post_event_to_server server, event, tweet
 
         cal.event do
           dtstart     event[:time].to_datetime

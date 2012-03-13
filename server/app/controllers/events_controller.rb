@@ -58,10 +58,21 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
   end
 
+  def find_or_create_tweet
+    if Tweet.exists? params[:tweet][:id]
+      return Tweet.find params[:tweet][:id]
+    end
+
+    tweet = Tweet.new(params[:tweet])
+    tweet.save
+    tweet
+  end
+
   # POST /events
   # POST /events.json
   def create
     @event = Event.new(params[:event])
+    @event.tweets.push find_or_create_tweet
 
     respond_to do |format|
       if @event.save
