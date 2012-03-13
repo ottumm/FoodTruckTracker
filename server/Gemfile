@@ -23,7 +23,14 @@ end
 
 gem 'jquery-rails'
 
+gem 'chronic'
+gem 'icalendar'
+gem 'json'
+gem 'nokogiri'
+gem 'rest-client'
 gem 'twitter'
+gem 'rspec'
+gem 'tzinfo'
 
 group :production do
 	gem 'mysql2'
