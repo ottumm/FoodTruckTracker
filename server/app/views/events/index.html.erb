@@ -1,6 +1,6 @@
-<div class="events container">
+<div class="events container-fluid">
   <% @events.each do |event| %>
-    <div class="event row">
+    <div class="event row-fluid">
       <%= image_tag event.profile_image_url, :class => "event-avatar span1", :alt => "Avatar" %>
       <div class="event-inner span11">
         <div class="event-information">
