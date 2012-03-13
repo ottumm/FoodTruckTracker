@@ -16,8 +16,12 @@ set -x
 
 $SSH -t "sudo service httpd stop"
 $SSH "[ ! -d FoodTruckTracker ] && git clone $REPOS"
+
+set -e
+
+$SSH "$CD_ROOT && git checkout -- ."
 $SSH "$CD_ROOT && git pull"
-$SSH "$CD_SERVER && bundle install"
+$SSH -t "$CD_SERVER && bundle install"
 $SSH "$CD_SERVER && bundle exec rake db:migrate RAILS_ENV=production"
 $SSH "$CD_SERVER && bundle exec rake assets:precompile"
 cat config/httpd.conf | $SSH "cat - > ~/httpd.conf"
