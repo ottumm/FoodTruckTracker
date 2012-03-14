@@ -1,0 +1,2 @@
+PATH=/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aws/bin:/home/ec2-user/bin
+*/5	*	*	*	*	cd /home/ec2-user/FoodTruckTracker/server/truckfinder && ruby find_trucks.rb --server localhost --cal temp.ics &> last_run && mv -f temp.ics ../public/cals/emeryville.ics

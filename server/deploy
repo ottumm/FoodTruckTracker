@@ -14,6 +14,7 @@ SSH="ssh $USER@$SERVER"
 
 set -x
 
+echo | $SSH "crontab -"
 $SSH -t "sudo service httpd stop"
 $SSH "[ ! -d FoodTruckTracker ] && git clone $REPOS"
 
@@ -27,3 +28,4 @@ $SSH "$CD_SERVER && bundle exec rake assets:precompile"
 cat config/httpd.conf | $SSH "cat - > ~/httpd.conf"
 $SSH -t "sudo mv ~/httpd.conf /etc/httpd/conf/httpd.conf"
 $SSH -t "sudo service httpd start"
+cat config/crontab | $SSH "crontab -"
