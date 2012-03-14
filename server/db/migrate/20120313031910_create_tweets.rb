@@ -1,7 +1,7 @@
 class CreateTweets < ActiveRecord::Migration
   def change
     create_table :tweets do |t|
-      t.integer :id, :limit => 8
+      t.integer :tweet_id, :limit => 8
       t.string :text
       t.datetime :timestamp
       t.string :profile_image
@@ -30,11 +30,11 @@ class CreateTweets < ActiveRecord::Migration
 
   def get_tweet event
     if Tweet.exists? event.tweet_id
-      return Tweet.find event.tweet_id
+      return Tweet.find_by_tweet_id event.tweet_id
     end
 
     tweet = Tweet.new do |t|
-      t.id = event.tweet_id
+      t.tweet_id = event.tweet_id
       t.text = event.description
       t.timestamp = event.created_at
       t.profile_image = event.profile_image

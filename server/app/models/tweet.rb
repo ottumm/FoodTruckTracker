@@ -7,7 +7,7 @@ class Tweet < ActiveRecord::Base
 	attr_accessor :time_zone
 
 	def url
-		"http://twitter.com/#{user}/status/#{id}"
+		"http://twitter.com/#{user}/status/#{tweet_id}"
 	end
 
 	def profile_image_url
