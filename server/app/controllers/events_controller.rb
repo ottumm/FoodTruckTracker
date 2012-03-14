@@ -59,8 +59,8 @@ class EventsController < ApplicationController
   end
 
   def find_or_create_tweet
-    if Tweet.exists? params[:tweet][:id]
-      return Tweet.find params[:tweet][:id]
+    if Tweet.exists? params[:tweet][:tweet_id]
+      return Tweet.find params[:tweet][:tweet_id]
     end
 
     tweet = Tweet.new(params[:tweet])
