@@ -12,10 +12,10 @@ def haversine_distance(p1, p2)
 	end
 
 	radius = 6371 # km
-	d_lat = to_rad p2[:lat] - p1[:lat]
-	d_lon = to_rad p2[:long] - p1[:long]
-	lat1 = to_rad p1[:lat]
-	lat2 = to_rad p2[:lat]
+	d_lat = to_rad p2[:latitude] - p1[:latitude]
+	d_lon = to_rad p2[:longitude] - p1[:longitude]
+	lat1 = to_rad p1[:latitude]
+	lat2 = to_rad p2[:latitude]
 
 	a = sin2(d_lat/2) + sin2(d_lon/2) * Math.cos(lat1) * Math.cos(lat2)
 	c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))

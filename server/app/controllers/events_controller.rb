@@ -2,22 +2,16 @@ class EventsController < ApplicationController
   # GET /events
   # GET /events.json
   def index
+    normalize_params!
     cookies[:id] = SecureRandom.hex(10) unless cookies[:id]
 
-    lat = params[:lat].to_f unless params[:lat].nil?
-    long = params[:long].to_f unless params[:long].nil?
-    range = params[:range].to_f unless params[:range].nil?
-    if params[:tz].nil?
-      time_zone = "Pacific Time (US & Canada)"
+    if geo_sensor?
+      save_request
+      @events = Event.find_nearby params, client_time_zone
+    elsif params[:date] == "all"
+      @events = Event.all
     else
-      time_zone = ActiveSupport::TimeZone[params[:tz].to_i]
-    end
-
-    if lat && long && range
-      save_request params[:lat], params[:long], cookies[:id]
-      @events = Event.find_nearby({:lat => lat, :long => long}, range, time_zone)
-    else
-      @events = Event.find_today(time_zone, params[:date])
+      @events = Event.find_today client_time_zone, params[:date]
     end
 
     respond_to do |format|
@@ -26,8 +20,23 @@ class EventsController < ApplicationController
     end
   end
 
-  def save_request latitude, longitude, client_id
-    @request = Request.new({:latitude => latitude, :longitude => longitude, :client_id => client_id})
+  def normalize_params!
+    params[:latitude] = params[:latitude].to_f unless params[:latitude].nil?
+    params[:longitude] = params[:longitude].to_f unless params[:longitude].nil?
+    params[:range] = params[:range].to_f unless params[:range].nil?
+  end
+
+  def geo_sensor?
+    params[:lat] && params[:long]
+  end
+
+  def client_time_zone
+    params[:tz] ? ActiveSupport::TimeZone[params[:tz].to_i] : "Pacific Time (US & Canada)"
+  end
+
+  def save_request!
+    params[:client_id] = cookies[:id]
+    @request = Request.new params
     @request.save or logger.warn "Error saving client request: #{@request.errors}"
   end
 

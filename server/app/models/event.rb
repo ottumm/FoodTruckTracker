@@ -19,7 +19,7 @@ class Event < ActiveRecord::Base
 
 	def self.find_nearby loc, range, time_zone
 		find_today(time_zone, nil).select do |event|
-			event.distance = haversine_distance(loc, {:lat => event[:latitude], :long => event[:longitude]})
+			event.distance = haversine_distance(loc, event)
 			event.distance < range
 		end.sort {|a, b| a.distance <=> b.distance}
 	end
