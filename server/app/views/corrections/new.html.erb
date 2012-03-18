@@ -1,5 +1,9 @@
 <div class="container">
-	<h1>Correct event <%= @correction.event.id %></h1>
+	<h1>Correct event:</h1>
+
+	<div class="row-fluid">
+		<%= render :partial => "shared/event", :locals => { :event => @correction.event, :show_corrections => false } %>
+	</div>
 
 	<%= render 'form' %>
 

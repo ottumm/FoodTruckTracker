@@ -1,0 +1,27 @@
+<div class="event row-fluid">
+  <div class="event-avatar span2">
+    <%= image_tag event.avatar_url, :alt => "#{event.title} avatar" %>
+  </div>
+  <div class="event-inner span10">
+    <div class="event-information">
+      <span class="event-name"><%= event.title %></span>
+      -
+      <span class="event-details">
+        <%= link_to event.location, event.map_url %> 
+        <% if event.distance %>
+          (<%= event.formatted_distance %> away)
+        <% end %>
+        at
+        <%= event.formatted_start_time %>
+      </span>
+    </div>
+    <% if show_corrections %>
+      <div class="event-correction">
+        Innacurate? <%= link_to "Suggest correction.", "#{new_correction_path}?event_id=#{event.id}" %>
+      </div>
+    <% end %>
+    <div class="event-tweet">
+      <%= event.tweets.first.text %> <%= link_to event.tweets.first.formatted_timestamp, event.tweets.first.url %>
+    </div>
+  </div>
+</div>

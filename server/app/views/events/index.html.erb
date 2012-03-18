@@ -1,30 +1,7 @@
 <div class="container-fluid">
   <div class="row-fluid">
     <div class="events span4">
-      <% @events.each do |event| %>
-        <div class="event row-fluid">
-          <div class="event-avatar span2">
-            <%= image_tag event.avatar_url, :alt => "#{event.title} avatar" %>
-          </div>
-          <div class="event-inner span10">
-            <div class="event-information">
-              <span class="event-name"><%= event.title %></span>
-              -
-              <span class="event-details">
-                <%= link_to event.location, event.map_url %> 
-                <% if event.distance %>
-                  (<%= event.formatted_distance %> away)
-                <% end %>
-                at
-                <%= event.formatted_start_time %>
-              </span>
-            </div>
-            <div class="event-tweet">
-              <%= event.tweets.first.text %> <%= link_to event.tweets.first.formatted_timestamp, event.tweets.first.url %>
-            </div>
-          </div>
-        </div>
-      <% end %>
+      <%= render :partial => "shared/event", :collection => @events, :locals => { :show_corrections => true } %>
       <% if @events.empty? %>
         I'm sorry, we didn't find any food trucks within <%= @sensor[:range] %> miles of you today. You can try <%= link_to "increasing the range", "/events?latitude=#{@sensor[:latitude]}&longitude=#{@sensor[:longitude]}&range=#{@sensor[:range] * 2}" %>.
       <% end %>
