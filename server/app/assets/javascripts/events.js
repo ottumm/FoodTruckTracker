@@ -1,6 +1,6 @@
 function initializeMap() {
 	var myOptions = {
-		zoom: 11,
+		zoom: 12,
 		center: new google.maps.LatLng(sensor.latitude, sensor.longitude),
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	}
