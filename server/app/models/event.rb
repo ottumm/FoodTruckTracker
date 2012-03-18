@@ -19,11 +19,15 @@ class Event < ActiveRecord::Base
 
 	def self.find_nearby sensor, range, date, time_zone
 		find_today(date, time_zone).select do |event|
-			event.distance = haversine_distance(sensor, event)
+			event.distance = to_mi haversine_distance(sensor, event)
 			event.distance < range
 		end.sort {|a, b| a.distance <=> b.distance}
 	end
 
+	def self.to_mi km
+		km * 0.621371192
+	end
+	
 	def map_url
 		"http://maps.google.com/maps?q=#{CGI::escape formatted_address}"
 	end
@@ -32,12 +36,8 @@ class Event < ActiveRecord::Base
 		start_time.in_time_zone(time_zone).strftime "%l:%M %P"
 	end
 
-	def to_mi km
-		km * 0.621371192
-	end
-
 	def formatted_distance
-		if distance then "%.1f mi" % to_mi(distance) else "n/a" end
+		if distance then "%.1f mi" % distance else "n/a" end
 	end
 
 	def avatar_url

@@ -14,11 +14,12 @@ class EventsController < ApplicationController
   end
 
   def initialize_sensor
-    if params[:latitude] && params[:longitude] && params[:range]
-      @sensor = { :latitude => params[:latitude].to_f, :longitude => params[:longitude].to_f, :range => params[:range].to_f }
+    range = params[:range] ? params[:range].to_f : 5.0
+    if params[:latitude] && params[:longitude]
+      @sensor = { :latitude => params[:latitude].to_f, :longitude => params[:longitude].to_f, :range => range }
       save_request!
     else
-      @sensor = { :latitude => 37.79457002, :longitude => -122.41135877, :range => 50 }
+      @sensor = { :latitude => 37.79457002, :longitude => -122.41135877, :range => range }
     end
   end
 

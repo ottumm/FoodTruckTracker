@@ -1,24 +1,37 @@
-<div class="events container-fluid">
-  <% @events.each do |event| %>
-    <div class="event row-fluid">
-      <%= image_tag event.avatar_url, :class => "event-avatar span1", :alt => "Avatar" %>
-      <div class="event-inner span11">
-        <div class="event-information">
-          <span class="event-name"><%= event.title %></span>
-          -
-          <span class="event-details">
-            <%= link_to event.location, event.map_url %> 
-            <% if event.distance %>
-              (<%= event.formatted_distance %> away)
-            <% end %>
-            at
-            <%= event.formatted_start_time %>
-          </span>
+<div class="container">
+  <div class="row">
+    <div class="span4 events">
+      <% @events.each do |event| %>
+        <div class="event row-fluid">
+          <div class="event-avatar span2">
+            <%= image_tag event.avatar_url, :alt => "#{event.title} avatar" %>
+          </div>
+          <div class="event-inner span10">
+            <div class="event-information">
+              <span class="event-name"><%= event.title %></span>
+              -
+              <span class="event-details">
+                <%= link_to event.location, event.map_url %> 
+                <% if event.distance %>
+                  (<%= event.formatted_distance %> away)
+                <% end %>
+                at
+                <%= event.formatted_start_time %>
+              </span>
+            </div>
+            <div class="event-tweet">
+              <%= event.tweets.first.text %> <%= link_to event.tweets.first.formatted_timestamp, event.tweets.first.url %>
+            </div>
+          </div>
         </div>
-        <div class="event-tweet">
-          <%= event.tweets.first.text %> <%= link_to event.tweets.first.formatted_timestamp, event.tweets.first.url %>
-        </div>
-      </div>
+      <% end %>
     </div>
-  <% end %>
+    <div id="map-canvas" class="map span8">
+    </div>
+  </div>
 </div>
+
+<script>
+  var sensor = JSON.parse('<%= @sensor.to_json.html_safe %>');
+  var events = JSON.parse('<%= @events.to_json(:only => [:latitude, :longitude], :include => { :tweets => { :only => [:user, :profile_image] } }).html_safe %>');
+</script>

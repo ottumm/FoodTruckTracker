@@ -6,7 +6,7 @@
 	function success(pos) {
 		window.location.href = "/events?latitude=" + pos.coords.latitude 
 		                     + "&longitude=" + pos.coords.longitude 
-		                     + "&range=10"
+		                     + "&range=5"
 		                     + "&tz=" + (-1 * new Date().getTimezoneOffset() / 60);
 	}
 
