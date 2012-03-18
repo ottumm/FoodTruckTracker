@@ -25,7 +25,8 @@ class CorrectionsController < ApplicationController
   # GET /corrections/new.json
   def new
     @correction = Correction.new
-    @correction.event = Event.find params[:event_id]
+    @correction.event = Event.find(params[:event_id])
+    @correction.event.time_zone = client_time_zone
 
     respond_to do |format|
       format.html # new.html.erb

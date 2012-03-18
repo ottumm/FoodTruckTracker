@@ -23,10 +23,6 @@ class EventsController < ApplicationController
     end
   end
 
-  def client_time_zone
-    params[:tz] ? ActiveSupport::TimeZone[params[:tz].to_i] : "Pacific Time (US & Canada)"
-  end
-
   def save_request!
     @request = Request.new({:latitude => params[:latitude], :longitude => params[:longitude], :client_id => cookies[:id]})
     @request.save or logger.warn "Error saving client request: #{@request.errors}"

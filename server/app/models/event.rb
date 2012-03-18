@@ -10,10 +10,6 @@ class Event < ActiveRecord::Base
 	def self.find_today date, time_zone
 		where(time_clause(date, time_zone)).order(:start_time).map do |event|
 			event.time_zone = time_zone
-			event.tweets.map do |tweet|
-				tweet.time_zone = time_zone
-				tweet
-			end
 			event
 		end
 	end
@@ -27,6 +23,14 @@ class Event < ActiveRecord::Base
 
 	def self.to_mi km
 		km * 0.621371192
+	end
+
+	def time_zone= tz
+		@time_zone = tz
+		tweets.each do |tweet|
+			tweet.time_zone = tz
+		end
+		self
 	end
 	
 	def map_url
@@ -57,7 +61,7 @@ class Event < ActiveRecord::Base
 		end
 
 		if date
-			now = Date.parse(date).to_time
+			now = Date.parse(date).to_time.in_time_zone time_zone
 		else
 			now = Time.now.in_time_zone time_zone
 		end
