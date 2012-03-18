@@ -13,10 +13,3 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
-
-# Custom ignore
-.DS_Store*
-ec2/*
-.bundle/*
-truckfinder/data/*
-truckfinder/test/test_data/*
