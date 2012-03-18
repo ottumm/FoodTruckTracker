@@ -47,7 +47,7 @@ def timeline_to_ical(list, logger, server, already_seen)
     already_seen.add tweet.id
     latest_tweet_id = tweet.id unless tweet.id < latest_tweet_id
     logger.log(tweet.user.screen_name, tweet)
-    TweetParser.events(tweet.text, tweet.created_at, tweet_timezone(tweet)).each do |event|
+    TweetParser.events(CGI.unescapeHTML(tweet.text), tweet.created_at, tweet_timezone(tweet)).each do |event|
       event[:name]          = "@#{tweet.user.screen_name}"
       event[:end]           = event[:time] + 2.hours
       event[:description]   = tweet.text

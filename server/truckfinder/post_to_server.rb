@@ -6,7 +6,7 @@ def post_event_to_server(server, event, tweet)
 	url = "http://#{server}/events.json"
 	puts "POST #{url} #{event}"
 	RestClient.post(url,
-		"tweet[text]" => tweet.text,
+		"tweet[text]" => CGI.unescapeHTML(tweet.text),
 		"tweet[timestamp]" => tweet.created_at,
 		"tweet[user]" => tweet.user.screen_name,
 		"tweet[tweet_id]" => tweet.id,
