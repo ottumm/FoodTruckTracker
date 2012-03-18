@@ -41,7 +41,7 @@ class Event < ActiveRecord::Base
 	end
 
 	def avatar_url
-		tweets.first.profile_image_url
+		tweets.first.profile_image
 	end
 
 	def title

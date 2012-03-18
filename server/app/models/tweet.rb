@@ -10,14 +10,23 @@ class Tweet < ActiveRecord::Base
 		"http://twitter.com/#{user}/status/#{tweet_id}"
 	end
 
-	def profile_image_url
-		if profile_image.nil?
+	def profile_image
+		if @profile_image.nil?
 			logger.debug "Fetching profile image url for #{user}"
-			self.profile_image = Twitter.user(user).profile_image_url
+			@profile_image = Twitter.user(user).profile_image_url
 			self.save
 		end
 
-		profile_image
+		@profile_image
+	end
+
+	def small_profile_image
+		if @small_profile_image.nil?
+			@small_profile_image = profile_image.gsub /normal/, "mini"
+			self.save
+		end
+
+		@small_profile_image
 	end
 
 	def formatted_timestamp

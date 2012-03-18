@@ -19,8 +19,7 @@ function initializeMap() {
 			map: map,
 			title: events[i].tweets[0].user
 		});
-		var image = new google.maps.MarkerImage(events[i].tweets[0].profile_image);
-		image.scaledSize = new google.maps.Size(24, 24);
+		var image = new google.maps.MarkerImage(events[i].tweets[0].small_profile_image);
 		marker.setIcon(image);
 		marker.setAnimation(google.maps.Animation.DROP);
 	}
