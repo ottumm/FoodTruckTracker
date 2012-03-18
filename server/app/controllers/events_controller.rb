@@ -2,17 +2,10 @@ class EventsController < ApplicationController
   # GET /events
   # GET /events.json
   def index
-    normalize_params!
     cookies[:id] = SecureRandom.hex(10) unless cookies[:id]
+    initialize_sensor
 
-    if geo_sensor?
-      save_request
-      @events = Event.find_nearby params, client_time_zone
-    elsif params[:date] == "all"
-      @events = Event.all
-    else
-      @events = Event.find_today client_time_zone, params[:date]
-    end
+    @events = Event.find_nearby @sensor, @sensor[:range], params[:date], client_time_zone
 
     respond_to do |format|
       format.html # index.html.erb
@@ -20,14 +13,13 @@ class EventsController < ApplicationController
     end
   end
 
-  def normalize_params!
-    params[:latitude] = params[:latitude].to_f unless params[:latitude].nil?
-    params[:longitude] = params[:longitude].to_f unless params[:longitude].nil?
-    params[:range] = params[:range].to_f unless params[:range].nil?
-  end
-
-  def geo_sensor?
-    params[:lat] && params[:long]
+  def initialize_sensor
+    if params[:latitude] && params[:longitude] && params[:range]
+      @sensor = { :latitude => params[:latitude].to_f, :longitude => params[:longitude].to_f, :range => params[:range].to_f }
+      save_request!
+    else
+      @sensor = { :latitude => 37.79457002, :longitude => -122.41135877, :range => 50 }
+    end
   end
 
   def client_time_zone
@@ -35,8 +27,7 @@ class EventsController < ApplicationController
   end
 
   def save_request!
-    params[:client_id] = cookies[:id]
-    @request = Request.new params
+    @request = Request.new({:latitude => params[:latitude], :longitude => params[:longitude], :client_id => cookies[:id]})
     @request.save or logger.warn "Error saving client request: #{@request.errors}"
   end
 
