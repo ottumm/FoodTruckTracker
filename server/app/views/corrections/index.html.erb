@@ -1,0 +1,35 @@
+<h1>Listing corrections</h1>
+
+<table>
+  <tr>
+    <th>Event</th>
+    <th>Start time</th>
+    <th>End time</th>
+    <th>Latitude</th>
+    <th>Longitude</th>
+    <th>Location</th>
+    <th>Formatted address</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @corrections.each do |correction| %>
+  <tr>
+    <td><%= correction.event_id %></td>
+    <td><%= correction.start_time %></td>
+    <td><%= correction.end_time %></td>
+    <td><%= correction.latitude %></td>
+    <td><%= correction.longitude %></td>
+    <td><%= correction.location %></td>
+    <td><%= correction.formatted_address %></td>
+    <td><%= link_to 'Show', correction %></td>
+    <td><%= link_to 'Edit', edit_correction_path(correction) %></td>
+    <td><%= link_to 'Destroy', correction, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Correction', new_correction_path %>

@@ -2,6 +2,7 @@ require 'haversine_distance'
 
 class Event < ActiveRecord::Base
 	has_many :notifications
+	has_many :corrections
 	has_many :tweets, :through => :notifications
 
 	attr_accessor :distance, :time_zone

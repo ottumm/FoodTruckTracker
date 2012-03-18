@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  event_id: 1
+  start_time: 2012-03-17 23:06:18
+  end_time: 2012-03-17 23:06:18
+  latitude: 1.5
+  longitude: 1.5
+  location: MyString
+  formatted_address: MyString
+
+two:
+  event_id: 1
+  start_time: 2012-03-17 23:06:18
+  end_time: 2012-03-17 23:06:18
+  latitude: 1.5
+  longitude: 1.5
+  location: MyString
+  formatted_address: MyString

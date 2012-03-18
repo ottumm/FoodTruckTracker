@@ -11,7 +11,19 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120318041408) do
+ActiveRecord::Schema.define(:version => 20120318060618) do
+
+  create_table "corrections", :force => true do |t|
+    t.integer  "event_id",          :null => false
+    t.datetime "start_time",        :null => false
+    t.datetime "end_time",          :null => false
+    t.float    "latitude",          :null => false
+    t.float    "longitude",         :null => false
+    t.string   "location",          :null => false
+    t.string   "formatted_address", :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
 
   create_table "events", :force => true do |t|
     t.string   "location"

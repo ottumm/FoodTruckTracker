@@ -1,0 +1,40 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Event:</b>
+  <%= @correction.event.id %>
+</p>
+
+<p>
+  <b>Start time:</b>
+  <%= @correction.start_time %>
+</p>
+
+<p>
+  <b>End time:</b>
+  <%= @correction.end_time %>
+</p>
+
+<p>
+  <b>Latitude:</b>
+  <%= @correction.latitude %>
+</p>
+
+<p>
+  <b>Longitude:</b>
+  <%= @correction.longitude %>
+</p>
+
+<p>
+  <b>Location:</b>
+  <%= @correction.location %>
+</p>
+
+<p>
+  <b>Formatted address:</b>
+  <%= @correction.formatted_address %>
+</p>
+
+
+<%= link_to 'Edit', edit_correction_path(@correction) %> |
+<%= link_to 'Back', corrections_path %>
