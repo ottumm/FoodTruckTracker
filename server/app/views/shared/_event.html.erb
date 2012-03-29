@@ -15,7 +15,7 @@
     </div>
     <% if show_corrections %>
       <div class="event-correction">
-        Innacurate? <%= link_to "Suggest correction.", "#{new_correction_path}?event_id=#{event.id}" %>
+        Innacurate? <%= link_to "Suggest a correction.", "#{new_correction_path}?event_id=#{event.id}" %>
       </div>
     <% end %>
     <% event.tweets.each do |tweet| %>
