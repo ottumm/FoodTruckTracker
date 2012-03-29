@@ -11,8 +11,6 @@
         <% if event.distance %>
           (<%= event.formatted_distance %> away)
         <% end %>
-        at
-        <%= event.formatted_start_time %>
       </span>
     </div>
     <% if show_corrections %>
@@ -20,8 +18,13 @@
         Innacurate? <%= link_to "Suggest correction.", "#{new_correction_path}?event_id=#{event.id}" %>
       </div>
     <% end %>
-    <div class="event-tweet">
-      <%= event.tweets.first.text %> <%= link_to event.tweets.first.formatted_timestamp, event.tweets.first.url %>
-    </div>
+    <% event.tweets.each do |tweet| %>
+      <div class="event-tweet">
+        <div class="quote-open">“</div>
+        <div>
+          <%= tweet.text %> <%= link_to tweet.formatted_timestamp, tweet.url %>
+        </div>
+      </div>
+    <% end %>
   </div>
 </div>

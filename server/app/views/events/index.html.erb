@@ -3,7 +3,7 @@
     <div class="events span4">
       <%= render :partial => "shared/event", :collection => @events, :locals => { :show_corrections => true } %>
       <% if @events.empty? %>
-        I'm sorry, we didn't find any food trucks within <%= @sensor[:range] %> miles of you today. You can try <%= link_to "increasing the range", "/events?latitude=#{@sensor[:latitude]}&longitude=#{@sensor[:longitude]}&range=#{@sensor[:range] * 2}" %>.
+        I'm sorry, but we didn't find any food trucks within <%= @sensor[:range] %> miles of you today. You can try <%= link_to "increasing the range", "/events?latitude=#{@sensor[:latitude]}&longitude=#{@sensor[:longitude]}&range=#{@sensor[:range] * 2}" %>.
       <% end %>
     </div>
     <div id="map-canvas" class="map span8">
@@ -11,7 +11,8 @@
   </div>
 </div>
 
-<script>
+<%= javascript_tag do -%>
   var sensor = JSON.parse('<%= @sensor.to_json.html_safe %>');
   var events = JSON.parse('<%= @events.to_json(:only => [:latitude, :longitude], :include => { :tweets => { :only => [:user, :small_profile_image] } }).html_safe %>');
-</script>
+  window.onload = function() { loadGoogleMapsAPI("initializeMap"); }
+<% end -%>

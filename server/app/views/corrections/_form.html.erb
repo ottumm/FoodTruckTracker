@@ -14,28 +14,16 @@
   <%= f.hidden_field :event_id %>
 
   <div class="field">
-    <%= f.label :start_time %><br />
-    <%= f.datetime_select :start_time %>
+    <%= f.label :start_time %>
+    <%= render :partial => "shared/datepicker", :locals => { :f => f, :field => :start_time, :default => @correction.event.start_time_tz } %>
   </div>
   <div class="field">
-    <%= f.label :end_time %><br />
-    <%= f.datetime_select :end_time %>
+    <%= f.label :end_time %>
+    <%= render :partial => "shared/datepicker", :locals => { :f => f, :field => :end_time, :default => @correction.event.end_time_tz } %>
   </div>
   <div class="field">
-    <%= f.label :latitude %><br />
-    <%= f.text_field :latitude %>
-  </div>
-  <div class="field">
-    <%= f.label :longitude %><br />
-    <%= f.text_field :longitude %>
-  </div>
-  <div class="field">
-    <%= f.label :location %><br />
-    <%= f.text_field :location %>
-  </div>
-  <div class="field">
-    <%= f.label :formatted_address %><br />
-    <%= f.text_field :formatted_address %>
+    <%= f.label :location %>
+    <%= render :partial => "shared/locationpicker", :locals => { :f => f, :latitude => @correction.event.latitude, :longitude => @correction.event.longitude } %>
   </div>
   <div class="actions">
     <%= f.submit %>

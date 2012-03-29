@@ -1,0 +1,72 @@
+<%= f.hidden_field :latitude %>
+<%= f.hidden_field :longitude %>
+<%= f.hidden_field :formatted_address %>
+
+<%= f.text_field :location %> <input type="button" id="location_search" value="Search"></input>
+<div id="address_list"></div>
+
+<%= javascript_tag do -%>
+	function addressListUI() {
+		$('input[type=submit]').attr('disabled', 'disabled');
+
+		var loc = $('#<%= f.id_for :location %>')[0];
+		var latitude = $('#<%= f.id_for :latitude %>')[0];
+		var longitude = $('#<%= f.id_for :longitude %>')[0];
+		var address = $('#<%= f.id_for :formatted_address %>')[0];
+		var coords = {latitude : <%= latitude %>, longitude : <%= longitude %>};
+
+		$('#location_search').click(function() {
+			new google.maps.Geocoder().geocode( { address: loc.value, bounds : getBounds(coords.latitude, coords.longitude) }, function(results, status) {
+				$('#address_list').html('');
+
+				if(status == google.maps.GeocoderStatus.ZERO_RESULTS) {
+					$('#address_list').text("No results found.")
+				}
+				else if(status != google.maps.GeocoderStatus.OK) {
+					$('#address_list').text("Error: " + status);
+					return;
+				}
+
+				$.each(results, function(i, result) {
+					$('#address_list').append($('<div/>', {id : elementId(i)}).append($('<a/>', {
+						href  : 'javascript:void(0)',
+						text  : result.formatted_address + " (" + result.types[0] + ")",
+						click : function() {
+							selectAddress(elementId(i), result);
+						}
+					})));
+				});
+
+				if(results.length == 1) {
+					selectAddress(elementId(0), results[0]);
+				}
+			});
+		});
+
+		var elementId = function(i) {
+			return 'address_list_' + i;
+		}
+
+		var selectAddress = function(elementId, result) {
+			latitude.value = result.geometry.location.lat();
+			longitude.value = result.geometry.location.lng();
+			address.value = result.formatted_address;
+			$('input[type=submit]').removeAttr('disabled');
+			$('#address_list').children().removeClass('selected');
+			$('#' + elementId).addClass('selected');
+		};
+
+		var getBounds = function(latitude, longitude) {
+			var sw_lat = latitude - 0.05;
+			var sw_long = longitude - 1;
+			var ne_lat = latitude + 0.05;
+			var ne_long = longitude + 1;
+
+			return new google.maps.LatLngBounds(
+			    new google.maps.LatLng(sw_lat, sw_long),
+			    new google.maps.LatLng(ne_lat, ne_long)
+			);
+		};
+	};
+	$(document).ready(function() { loadGoogleMapsAPI("addressListUI"); });
+<% end -%>

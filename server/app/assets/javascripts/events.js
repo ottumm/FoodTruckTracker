@@ -24,12 +24,3 @@ function initializeMap() {
 		marker.setAnimation(google.maps.Animation.DROP);
 	}
 }
-
-function loadMapScript() {
-	var script = document.createElement("script");
-	script.type = "text/javascript";
-	script.src = "http://maps.googleapis.com/maps/api/js?key=AIzaSyCoNyyQ_MuIRqQhMoNl_VP2C32P0EQM4NI&sensor=true&callback=initializeMap";
-	document.body.appendChild(script);
-}
-
-window.onload = loadMapScript;

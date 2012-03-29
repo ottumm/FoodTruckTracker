@@ -37,8 +37,16 @@ class Event < ActiveRecord::Base
 		"http://maps.google.com/maps?q=#{CGI::escape formatted_address}"
 	end
 
+	def start_time_tz
+		start_time.in_time_zone time_zone
+	end
+
+	def end_time_tz
+		end_time.in_time_zone time_zone
+	end
+
 	def formatted_start_time
-		start_time.in_time_zone(time_zone).strftime "%l:%M %P"
+		start_time_tz.strftime "%l:%M %P"
 	end
 
 	def formatted_distance
