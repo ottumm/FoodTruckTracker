@@ -11,22 +11,16 @@ class Tweet < ActiveRecord::Base
 	end
 
 	def profile_image
-		if @profile_image.nil?
+		if super.nil?
 			logger.debug "Fetching profile image url for #{user}"
-			@profile_image = Twitter.user(user).profile_image_url
-			self.save
+			update_attribute :profile_image, Twitter.user(user).profile_image_url
 		end
 
-		@profile_image
+		super
 	end
 
 	def small_profile_image
-		if @small_profile_image.nil?
-			@small_profile_image = profile_image.gsub /normal/, "mini"
-			self.save
-		end
-
-		@small_profile_image
+		profile_image.gsub /normal/, "mini"
 	end
 
 	def formatted_timestamp
