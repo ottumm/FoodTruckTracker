@@ -8,11 +8,6 @@ class Tweet < ActiveRecord::Base
 		"http://twitter.com/#{user}/status/#{tweet_id}"
 	end
 
-	def pre_cache
-		profile_image
-		time_zone
-	end
-
 	def profile_image
 		if super.nil?
 			logger.debug "Fetching profile image url for #{user}"

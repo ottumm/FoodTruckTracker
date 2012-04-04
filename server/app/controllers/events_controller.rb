@@ -78,7 +78,6 @@ class EventsController < ApplicationController
 
     tweet = Tweet.new(params[:tweet])
     tweet.save
-    tweet.pre_cache
     tweet
   end
 

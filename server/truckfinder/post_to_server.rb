@@ -10,6 +10,8 @@ def post_event_to_server(server, event, tweet)
 		"tweet[timestamp]" => tweet.created_at,
 		"tweet[user]" => tweet.user.screen_name,
 		"tweet[tweet_id]" => tweet.id,
+		"tweet[time_zone]" => tweet.user.time_zone,
+		"tweet[profile_image]" => tweet.user.profile_image_url,
 		"event[location]" => event[:loc],
 		"event[formatted_address]" => event[:formatted_address],
 		"event[latitude]" => event[:latitude],
