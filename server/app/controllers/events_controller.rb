@@ -71,22 +71,6 @@ class EventsController < ApplicationController
     end
   end
 
-  # GET /events/new
-  # GET /events/new.json
-  def new
-    @event = Event.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @event }
-    end
-  end
-
-  # GET /events/1/edit
-  def edit
-    @event = Event.find(params[:id])
-  end
-
   def find_or_create_tweet
     if Tweet.exists? params[:tweet][:tweet_id]
       return Tweet.find params[:tweet][:tweet_id]
@@ -94,6 +78,7 @@ class EventsController < ApplicationController
 
     tweet = Tweet.new(params[:tweet])
     tweet.save
+    tweet.pre_cache
     tweet
   end
 
@@ -105,6 +90,7 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       if @event.save
+        Event.merge_all!
         format.html { redirect_to @event, notice: 'Event was successfully created.' }
         format.json { render json: @event, status: :created, location: @event }
       else
@@ -125,22 +111,7 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       if @event.save
-        format.html { redirect_to @event, notice: 'Event was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @event.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PUT /events/1
-  # PUT /events/1.json
-  def update
-    @event = Event.find(params[:id])
-
-    respond_to do |format|
-      if @event.update_attributes(params[:event])
+        Event.merge_all!
         format.html { redirect_to @event, notice: 'Event was successfully updated.' }
         format.json { head :no_content }
       else

@@ -26,8 +26,57 @@ class Event < ActiveRecord::Base
 		end.sort {|a, b| a.start_time <=> b.start_time}
 	end
 
-	def self.merge! event
-		event
+	def self.all_sorted_by_truck
+		all.sort do |a, b|
+			if a.title != b.title
+			 	a.title <=> b.title
+			elsif a.location != b.location
+				a.location <=> b.location
+			elsif a.start_time != b.start_time
+				a.start_time <=> b.start_time
+			else
+				b.created_at <=> a.created_at
+			end
+		end
+	end
+
+	def self.merge_all!
+		events = all_sorted_by_truck
+		prev = events.first
+		events.last(events.length - 1).each do |cur|
+			if !prev
+				prev = cur
+			elsif prev.merge! cur
+				logger.debug "Destroy #{cur.inspect}"
+				cur.destroy
+				prev = nil
+			else
+				prev = cur
+			end
+		end
+	end
+
+	def merge! event
+		if event.title == title && event.location == location && event.start_time.beginning_of_day == start_time.beginning_of_day
+			logger.debug "Merging #{title} - #{location} at #{start_time}"
+			event.tweets.each do |t|
+				if !tweets.include? t
+					logger.debug "  Push from #{event.id} to #{id} - #{location}"
+					tweets.push t
+				end
+			end
+			return true
+		end
+
+		false
+	end
+
+	def time_zone
+		if @time_zone.nil?
+			tweets.first.time_zone
+		else
+			@time_zone
+		end
 	end
 
 	def time_zone= tz

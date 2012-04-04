@@ -28,3 +28,16 @@ function initializeMap() {
 		marker.setAnimation(google.maps.Animation.DROP);
 	}
 }
+
+function toggleTweets(eventId) {
+	var toggle = $('#' + eventId + '_tweet_toggle');
+	var extras = $('#' + eventId + '_extra_tweets');
+	if(toggle.is(':visible')) {
+		toggle.hide();
+		extras.show('fast');
+	}
+	else {
+		extras.hide('fast');
+		toggle.show();
+	}
+}

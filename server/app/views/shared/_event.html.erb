@@ -11,15 +11,18 @@
         <% if event.distance %>
           (<%= event.formatted_distance %> away)
         <% end %>
+        at <%= event.start_time %>
       </span>
     </div>
-    <% event.tweets.each do |tweet| %>
-      <div class="event-tweet">
-        <div class="quote-open">“</div>
-        <div>
-          <%= tweet.text %> <%= link_to tweet.formatted_timestamp, tweet.url %>
+    <div class="event-tweets">
+      <%= render :partial => "shared/tweet", :locals => { :tweet => event.tweets.first } %>
+      <% if event.tweets.length > 1 %>
+        <%= link_to "+ #{pluralize(event.tweets.length - 1, "more tweet")}", "javascript:toggleTweets(#{event.id})", :id => "#{event.id}_tweet_toggle", :class => "tweet-toggle" %>
+        <div id="<%= event.id %>_extra_tweets" style="display: none;">
+          <%= render :partial => "shared/tweet", :collection => event.tweets.last(event.tweets.length - 1) %>
+          <%= link_to "[collapse]", "javascript:toggleTweets(#{event.id})", :class => "tweet-toggle" %>
         </div>
-      </div>
-    <% end %>
+      <% end %>
+    </div>
   </div>
 </div>

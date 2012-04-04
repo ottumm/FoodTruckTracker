@@ -4,16 +4,28 @@ class Tweet < ActiveRecord::Base
 	has_many :notifications
 	has_many :events, :through => :notifications
 
-	attr_accessor :time_zone
-
 	def url
 		"http://twitter.com/#{user}/status/#{tweet_id}"
+	end
+
+	def pre_cache
+		profile_image
+		time_zone
 	end
 
 	def profile_image
 		if super.nil?
 			logger.debug "Fetching profile image url for #{user}"
 			update_attribute :profile_image, Twitter.user(user).profile_image_url
+		end
+
+		super
+	end
+
+	def time_zone
+		if super.nil?
+			logger.debug "Fetching time_zone for #{user}"
+			update_attribute :time_zone, Twitter.user(user).time_zone
 		end
 
 		super
