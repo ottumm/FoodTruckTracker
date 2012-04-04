@@ -39,7 +39,7 @@ class EventsController < ApplicationController
     if params[:date] == "all"
       "all"
     elsif params[:date]
-      Date.parse(params[:date]).to_time.in_time_zone client_time_zone
+      Time.parse(params[:date]).in_time_zone client_time_zone
     else
       Time.now.in_time_zone client_time_zone
     end
