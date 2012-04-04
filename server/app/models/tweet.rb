@@ -19,10 +19,6 @@ class Tweet < ActiveRecord::Base
 		super
 	end
 
-	def small_profile_image
-		profile_image.gsub /normal/, "mini"
-	end
-
 	def formatted_timestamp
 		timestamp.in_time_zone(time_zone).strftime "%a %b %e %l:%M %P"
 	end

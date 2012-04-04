@@ -1,4 +1,8 @@
 function initializeMap() {
+	function smallProfileImage(profileImage) {
+		return profileImage.replace('normal', 'mini');
+	}
+
 	var myOptions = {
 		zoom: 12,
 		center: new google.maps.LatLng(sensor.latitude, sensor.longitude),
@@ -19,7 +23,7 @@ function initializeMap() {
 			map: map,
 			title: events[i].tweets[0].user
 		});
-		var image = new google.maps.MarkerImage(events[i].tweets[0].small_profile_image);
+		var image = new google.maps.MarkerImage(smallProfileImage(events[i].tweets[0].profile_image));
 		marker.setIcon(image);
 		marker.setAnimation(google.maps.Animation.DROP);
 	}
