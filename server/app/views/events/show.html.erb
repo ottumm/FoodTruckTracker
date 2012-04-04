@@ -1,40 +1,7 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <b>Name:</b>
-  <%= @event.title %>
-</p>
+<div class="container">
+  <%= render :partial => "shared/event", :locals => { :event => @event, :show_corrections => true } %>
+</div>
 
-<p>
-  <b>Location:</b>
-  <%= @event.location %>
-</p>
-
-<p>
-  <b>Latitude:</b>
-  <%= @event.latitude %>
-</p>
-
-<p>
-  <b>Longitude:</b>
-  <%= @event.longitude %>
-</p>
-
-<p>
-  <b>Start time:</b>
-  <%= @event.start_time %>
-</p>
-
-<p>
-  <b>End time:</b>
-  <%= @event.end_time %>
-</p>
-
-<p>
-  <b>Description:</b>
-  <%= @event.description %>
-</p>
-
-
-<%= link_to 'Edit', edit_event_path(@event) %> |
 <%= link_to 'Back', events_path %>

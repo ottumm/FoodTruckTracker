@@ -19,5 +19,5 @@ def haversine_distance(p1, p2)
 
 	a = sin2(d_lat/2) + sin2(d_lon/2) * Math.cos(lat1) * Math.cos(lat2)
 	c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
-	radius * c
+	radius * c * 0.621371192 # to miles
 end

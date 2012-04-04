@@ -15,11 +15,11 @@
 
   <div class="field">
     <%= f.label :start_time %>
-    <%= render :partial => "shared/datepicker", :locals => { :f => f, :field => :start_time, :default => @correction.event.start_time_tz } %>
+    <%= render :partial => "shared/datepicker", :locals => { :f => f, :field => :start_time, :default => @correction.event.start_time } %>
   </div>
   <div class="field">
     <%= f.label :end_time %>
-    <%= render :partial => "shared/datepicker", :locals => { :f => f, :field => :end_time, :default => @correction.event.end_time_tz } %>
+    <%= render :partial => "shared/datepicker", :locals => { :f => f, :field => :end_time, :default => @correction.event.end_time } %>
   </div>
   <div class="field">
     <%= f.label :location %>

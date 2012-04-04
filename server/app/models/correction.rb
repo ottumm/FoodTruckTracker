@@ -9,4 +9,14 @@ class Correction < ActiveRecord::Base
 	validates_presence_of :latitude
 	validates_presence_of :longitude
 	validates_presence_of :formatted_address
+
+	attr_accessor :time_zone
+
+	def start_time
+		super.in_time_zone time_zone
+	end
+
+	def end_time
+		super.in_time_zone time_zone
+	end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120318060618) do
+ActiveRecord::Schema.define(:version => 20120402063046) do
 
   create_table "corrections", :force => true do |t|
     t.integer  "event_id",          :null => false
@@ -34,6 +34,8 @@ ActiveRecord::Schema.define(:version => 20120318060618) do
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
     t.string   "formatted_address"
+    t.boolean  "verified"
+    t.integer  "correction_id"
   end
 
   create_table "notifications", :force => true do |t|
@@ -52,14 +54,13 @@ ActiveRecord::Schema.define(:version => 20120318060618) do
   end
 
   create_table "tweets", :force => true do |t|
-    t.integer  "tweet_id",            :limit => 8
+    t.integer  "tweet_id",      :limit => 8
     t.string   "text"
     t.datetime "timestamp"
     t.string   "profile_image"
     t.string   "user"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
-    t.string   "small_profile_image"
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
   end
 
 end

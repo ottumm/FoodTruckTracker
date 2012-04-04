@@ -2,11 +2,11 @@ class CorrectionsController < ApplicationController
   # GET /corrections
   # GET /corrections.json
   def index
-    @corrections = Correction.all
+    @events = Event.all_with_corrections client_time_zone
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @corrections }
+      format.json { render json: Correction.all }
     end
   end
 

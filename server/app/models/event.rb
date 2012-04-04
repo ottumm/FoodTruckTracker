@@ -8,28 +8,32 @@ class Event < ActiveRecord::Base
 	attr_accessor :distance, :time_zone
 
 	def self.find_today date, time_zone
-		where(time_clause(date, time_zone)).order(:start_time).map do |event|
+		where(time_clause(date, time_zone)).order(:start_time).each do |event|
 			event.time_zone = time_zone
-			event
 		end
 	end
 
 	def self.find_nearby sensor, range, date, time_zone
 		find_today(date, time_zone).select do |event|
-			event.distance = to_mi haversine_distance(sensor, event)
+			event.distance = haversine_distance sensor, event
 			event.distance < range
 		end.sort {|a, b| a.distance <=> b.distance}
 	end
 
-	def self.to_mi km
-		km * 0.621371192
+	def self.all_with_corrections time_zone
+		all.select {|e| !e.corrections.empty?}.each do |e|
+			e.time_zone = time_zone
+		end.sort {|a, b| a.start_time <=> b.start_time}
+	end
+
+	def self.merge! event
+		event
 	end
 
 	def time_zone= tz
 		@time_zone = tz
-		tweets.each do |tweet|
-			tweet.time_zone = tz
-		end
+		tweets.each {|t| t.time_zone = tz}
+		corrections.each {|c| c.time_zone = tz}
 		self
 	end
 	
@@ -37,16 +41,16 @@ class Event < ActiveRecord::Base
 		"http://maps.google.com/maps?q=#{CGI::escape formatted_address}"
 	end
 
-	def start_time_tz
-		start_time.in_time_zone time_zone
+	def start_time
+		super.in_time_zone time_zone
 	end
 
-	def end_time_tz
-		end_time.in_time_zone time_zone
+	def end_time
+		super.in_time_zone time_zone
 	end
 
 	def formatted_start_time
-		start_time_tz.strftime "%l:%M %P"
+		start_time.strftime "%l:%M %P"
 	end
 
 	def formatted_distance

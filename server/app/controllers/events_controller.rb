@@ -114,6 +114,26 @@ class EventsController < ApplicationController
     end
   end
 
+  # POST /events/1/correct
+  # POST /events/1/correct.json
+  def correct
+    @event = Event.find(params[:id])
+    @correction = Correction.find(params[:correction_id])
+
+    @event.update_attributes(ActiveSupport::JSON.decode @correction.to_json(:except => [:id, :event_id, :updated_at]))
+    @event.verified = true
+
+    respond_to do |format|
+      if @event.save
+        format.html { redirect_to @event, notice: 'Event was successfully updated.' }
+        format.json { head :no_content }
+      else
+        format.html { render action: "edit" }
+        format.json { render json: @event.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   # PUT /events/1
   # PUT /events/1.json
   def update
