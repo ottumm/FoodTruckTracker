@@ -1,12 +1,27 @@
 <div class="container-fluid">
   <div class="row-fluid">
     <div class="events span4">
+      <div class="date-control row">
+        <% if @previous_day_path %>
+          <%= link_to "«", @previous_day_path %>
+        <% end %>
+        <%= @current_date %>
+        <% if @next_day_path %>
+          <%= link_to "»", @next_day_path %>
+        <% end %>
+      </div>
       <%= render :partial => "shared/event", :collection => @events, :locals => { :show_corrections => true } %>
       <% if @events.empty? %>
-        I'm sorry, but we didn't find any food trucks within <%= @sensor[:range] %> miles of you today. You can try <%= link_to "increasing the range", "/events?latitude=#{@sensor[:latitude]}&longitude=#{@sensor[:longitude]}&range=#{@sensor[:range] * 2}" %>.
+        No food trucks found.
       <% end %>
+      <div class="range-control row">
+        <%= link_to "[-]", @decrease_range_path %>
+        <%= @sensor[:range] %> mile range
+        <%= link_to "[+]", @increase_range_path %>
+      </div>
     </div>
-    <div id="map-canvas" class="map span8">
+    <div class="map span8">
+      <div id="map-canvas"></div>
     </div>
   </div>
 </div>

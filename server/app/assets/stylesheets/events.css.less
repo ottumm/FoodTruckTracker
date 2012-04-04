@@ -1,5 +1,17 @@
 @import "twitter/bootstrap";
 
+div.event {
+	border-bottom-style: solid;
+	border-width: 1px;
+	padding-bottom: 5px;
+	margin-bottom: 5px;
+}
+
+div.event-avatar {
+	float: left;
+	margin-right: 10px;
+}
+
 div.event-information {
 	font-size: @baseFontSize + 3;
 	line-height: @baseLineHeight + 3;
@@ -26,6 +38,21 @@ div.map {
 	height: 620px;
 }
 
+#map-canvas {
+	height: 100%;
+	width: 100%;
+}
+
 div.event-correction {
 	font-size: @baseFontSize - 2;
+}
+
+div.date-control {
+	text-align: center;
+	font-size: 20pt;
+	line-height: 25pt;
+}
+
+div.range-control {
+	text-align: center;
 }

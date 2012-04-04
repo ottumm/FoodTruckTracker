@@ -5,11 +5,43 @@ class EventsController < ApplicationController
     cookies[:id] = SecureRandom.hex(10) unless cookies[:id]
     initialize_sensor
 
-    @events = Event.find_nearby @sensor, @sensor[:range], params[:date], client_time_zone
+    @events = Event.find_nearby @sensor, @sensor[:range], request_date, client_time_zone
+    @current_date = formatted_date
+    if request_date != "all"
+      @previous_day_path = index_path(request_date - 1.day, @sensor[:range])
+      @next_day_path = index_path(request_date + 1.day, @sensor[:range])
+    end
+    @decrease_range_path = index_path(request_date, @sensor[:range] / 2)
+    @increase_range_path = index_path(request_date, @sensor[:range] * 2)
 
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @events }
+    end
+  end
+
+  def index_path date, range
+    "/events?latitude=#{@sensor[:latitude]}&longitude=#{@sensor[:longitude]}&range=#{range}&date=#{date}"
+  end
+
+  def formatted_date
+    date = request_date
+    if date == "all"
+      "All Dates"
+    elsif date.beginning_of_day == Time.now.in_time_zone(client_time_zone).beginning_of_day
+      "Today"
+    else
+      date.strftime "%a, %b %e"
+    end
+  end
+
+  def request_date
+    if params[:date] == "all"
+      "all"
+    elsif params[:date]
+      Date.parse(params[:date]).to_time.in_time_zone client_time_zone
+    else
+      Time.now.in_time_zone client_time_zone
     end
   end
 

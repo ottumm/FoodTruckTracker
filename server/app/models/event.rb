@@ -68,11 +68,6 @@ class Event < ActiveRecord::Base
 			return {}
 		end
 
-		if date
-			now = Date.parse(date).to_time.in_time_zone time_zone
-		else
-			now = Time.now.in_time_zone time_zone
-		end
-		{ :start_time => now.beginning_of_day..now.beginning_of_day + 1.day }
+		{ :start_time => date.beginning_of_day..date.beginning_of_day + 1.day }
 	end
 end
