@@ -1,7 +1,7 @@
 <p id="notice"><%= notice %></p>
 
 <div class="container">
-  <%= render :partial => "shared/event", :locals => { :event => @event, :show_corrections => true } %>
+  <%= render :partial => "shared/event", :locals => { :event => @event } %>
 </div>
 
 <%= link_to 'Back', events_path %>

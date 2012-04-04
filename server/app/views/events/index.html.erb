@@ -10,7 +10,7 @@
           <%= link_to "»", @next_day_path %>
         <% end %>
       </div>
-      <%= render :partial => "shared/event", :collection => @events, :locals => { :show_corrections => true } %>
+      <%= render :partial => "shared/event", :collection => @events %>
       <% if @events.empty? %>
         No food trucks found.
       <% end %>

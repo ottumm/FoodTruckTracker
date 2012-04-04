@@ -2,7 +2,7 @@
 
 <div class="correction-list container">
     <% @events.each do |event| %>
-      <%= render :partial => "shared/event", :locals => { :event => event, :show_corrections => false } %>
+      <%= render :partial => "shared/event", :locals => { :event => event } %>
       <div class="corrections">
         <%= form_for event, :url => correct_event_path(event), :method => :post do |f| %>
           <% event.corrections.each do |correction| %>

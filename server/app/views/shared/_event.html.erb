@@ -13,11 +13,6 @@
         <% end %>
       </span>
     </div>
-    <% if show_corrections %>
-      <div class="event-correction">
-        Innacurate? <%= link_to "Suggest a correction.", "#{new_correction_path}?event_id=#{event.id}" %>
-      </div>
-    <% end %>
     <% event.tweets.each do |tweet| %>
       <div class="event-tweet">
         <div class="quote-open">“</div>
