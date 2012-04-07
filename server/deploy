@@ -7,7 +7,7 @@ CD_SERVER="cd FoodTruckTracker/server"
 if [[ $1 = "production" ]]; then
 	SERVER=eat-mobile.com
 else
-	SERVER=ec2-107-20-30-178.compute-1.amazonaws.com
+	SERVER=ec2-23-20-214-91.compute-1.amazonaws.com
 fi
 
 SSH="ssh $USER@$SERVER"
@@ -23,7 +23,7 @@ set -e
 $SSH "$CD_ROOT && git checkout -- ."
 $SSH "$CD_ROOT && git pull"
 $SSH -t "$CD_SERVER && bundle install"
-$SSH "$CD_SERVER && bundle exec rake db:migrate RAILS_ENV=production"
+$SSH "$CD_SERVER && bundle exec rake db:migrate --trace RAILS_ENV=production"
 $SSH "$CD_SERVER && bundle exec rake assets:precompile"
 $SSH -t "$CD_SERVER && sudo mv -f config/httpd.conf /etc/httpd/conf/httpd.conf"
 $SSH -t "sudo service httpd start"
