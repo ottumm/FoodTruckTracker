@@ -34,10 +34,10 @@ function toggleTweets(eventId) {
 	var extras = $('#' + eventId + '_extra_tweets');
 	if(toggle.is(':visible')) {
 		toggle.hide();
-		extras.show('fast');
+		extras.show();
 	}
 	else {
-		extras.hide('fast');
+		extras.hide();
 		toggle.show();
 	}
 }
