@@ -5,6 +5,8 @@ class Event < ActiveRecord::Base
 	has_many :corrections
 	has_many :tweets, :through => :notifications
 
+	validates :location, :latitude, :longitude, :start_time, :end_time, :formatted_address, :presence => true
+
 	attr_accessor :distance, :time_zone
 
 	def self.find_today date, time_zone
