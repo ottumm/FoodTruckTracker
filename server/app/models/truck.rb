@@ -1,3 +1,5 @@
+require 'default_time_zone'
+
 class Truck < ActiveRecord::Base
 	has_many :postings
 	has_many :tweets, :through => :postings
@@ -14,7 +16,12 @@ class Truck < ActiveRecord::Base
 	def time_zone
 		if super.nil?
 			logger.debug "Fetching time_zone for #{name}"
-			update_attribute :time_zone, Twitter.user(name).time_zone
+			tz = Twitter.user(name).time_zone
+			update_attribute :time_zone, (tz or "none")
+		end
+
+		if super == "none"
+			return default_time_zone
 		end
  
 		super

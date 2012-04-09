@@ -1,3 +1,5 @@
+require 'default_time_zone'
+
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
@@ -8,7 +10,7 @@ class ApplicationController < ActionController::Base
     elsif cookies[:tz]
       ActiveSupport::TimeZone[cookies[:tz].to_i]
     else
-      "Pacific Time (US & Canada)"
+      default_time_zone
     end
   end
 end
