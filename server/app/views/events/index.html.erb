@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row-fluid">
-    <div class="events span4">
+    <div class="events <%= params[:mobile] ? "span12" : "span4" %>">
       <div class="date-control row">
         <% if @previous_day_path %>
           <%= link_to "«", @previous_day_path %>
@@ -20,14 +20,16 @@
         <%= link_to "[+]", @increase_range_path %>
       </div>
     </div>
-    <div class="map span8">
-      <div id="map-canvas"></div>
-    </div>
+    <% if !params[:mobile] %>
+      <div class="map span8">
+        <div id="map-canvas"></div>
+      </div>
+    <% end %>
   </div>
 </div>
 
 <%= javascript_tag do -%>
-  var sensor = JSON.parse('<%= @sensor.to_json.html_safe %>');
-  var events = JSON.parse('<%= @events.to_json(:only => [:latitude, :longitude], :include => { :tweets => { :include => :truck, :only => [:tweet_id] } }).html_safe %>');
+  var sensor = <%= @sensor.to_json.html_safe %>;
+  var events = <%= @events.to_json(:only => [:latitude, :longitude], :include => { :tweets => { :include => :truck, :only => [:tweet_id] } }).html_safe %>;
   window.onload = function() { loadGoogleMapsAPI("initializeMap"); }
 <% end -%>

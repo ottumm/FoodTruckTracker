@@ -1,16 +1,22 @@
 <div id="location">
-	Finding current location...
+	<p>Detecting current location...</p>
+	<%= image_tag "ajax-loader.gif" %>
 </div>
 
 <script>
 	function success(pos) {
 		window.location.href = "/events?latitude=" + pos.coords.latitude 
 		                     + "&longitude=" + pos.coords.longitude 
-		                     + "&tz=" + (-1 * new Date().getTimezoneOffset() / 60);
+		                     + "&tz=" + (-1 * new Date().getTimezoneOffset() / 60)
+		                     + (isMobile() ? "&mobile=true" : "");
 	}
 
 	function error(error) {
 		$("#location").replaceWith("Geolocation is not supported by this browser")
+	}
+
+	function isMobile() {
+		return screen.width < 600;
 	}
 
 	if (navigator.geolocation) {

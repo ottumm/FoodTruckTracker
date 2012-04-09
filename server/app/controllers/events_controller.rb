@@ -21,7 +21,7 @@ class EventsController < ApplicationController
   end
 
   def index_path date, range
-    "/events?latitude=#{@sensor[:latitude]}&longitude=#{@sensor[:longitude]}&range=#{range}&date=#{date}"
+    "/events?latitude=#{@sensor[:latitude]}&longitude=#{@sensor[:longitude]}&range=#{range}&date=#{date}" + (params[:mobile] ? "&mobile=true" : "")
   end
 
   def formatted_date
