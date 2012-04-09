@@ -28,6 +28,6 @@
 
 <%= javascript_tag do -%>
   var sensor = JSON.parse('<%= @sensor.to_json.html_safe %>');
-  var events = JSON.parse('<%= @events.to_json(:only => [:latitude, :longitude], :include => { :tweets => { :only => [:user, :profile_image] } }).html_safe %>');
+  var events = JSON.parse('<%= @events.to_json(:only => [:latitude, :longitude], :include => { :tweets => { :include => :truck, :only => [:tweet_id] } }).html_safe %>');
   window.onload = function() { loadGoogleMapsAPI("initializeMap"); }
 <% end -%>

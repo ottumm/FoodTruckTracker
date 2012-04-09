@@ -21,9 +21,9 @@ function initializeMap() {
 		var marker = new google.maps.Marker({
 			position: new google.maps.LatLng(events[i].latitude, events[i].longitude),
 			map: map,
-			title: events[i].tweets[0].user
+			title: events[i].tweets[0].truck.name
 		});
-		var image = new google.maps.MarkerImage(smallProfileImage(events[i].tweets[0].profile_image));
+		var image = new google.maps.MarkerImage(smallProfileImage(events[i].tweets[0].truck.profile_image));
 		marker.setIcon(image);
 		marker.setAnimation(google.maps.Animation.DROP);
 	}

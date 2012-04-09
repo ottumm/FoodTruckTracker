@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120404082736) do
+ActiveRecord::Schema.define(:version => 20120407041749) do
 
   create_table "corrections", :force => true do |t|
     t.integer  "event_id",          :null => false
@@ -45,6 +45,13 @@ ActiveRecord::Schema.define(:version => 20120404082736) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "postings", :force => true do |t|
+    t.integer  "truck_id"
+    t.integer  "tweet_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "requests", :force => true do |t|
     t.string   "client_id"
     t.float    "latitude"
@@ -53,15 +60,22 @@ ActiveRecord::Schema.define(:version => 20120404082736) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "trucks", :force => true do |t|
+    t.string   "name"
+    t.string   "profile_image"
+    t.string   "time_zone"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "trucks", ["name"], :name => "index_trucks_on_name"
+
   create_table "tweets", :force => true do |t|
-    t.integer  "tweet_id",      :limit => 8
+    t.integer  "tweet_id",   :limit => 8
     t.string   "text"
     t.datetime "timestamp"
-    t.string   "profile_image"
-    t.string   "user"
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
-    t.string   "time_zone"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
   end
 
 end

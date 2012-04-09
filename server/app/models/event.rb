@@ -26,22 +26,8 @@ class Event < ActiveRecord::Base
 		end.sort {|a, b| a.start_time <=> b.start_time}
 	end
 
-	def self.all_sorted_by_truck
-		all.sort do |a, b|
-			if a.title != b.title
-			 	a.title <=> b.title
-			elsif a.location != b.location
-				a.location <=> b.location
-			elsif a.start_time != b.start_time
-				a.start_time <=> b.start_time
-			else
-				b.created_at <=> a.created_at
-			end
-		end
-	end
-
 	def self.merge_all!
-		events = all_sorted_by_truck
+		events = all.sort_by {|e| [e.title, e.location, e.start_time]}
 		prev = events.first
 		events.last(events.length - 1).each do |cur|
 			if !prev
@@ -73,7 +59,7 @@ class Event < ActiveRecord::Base
 
 	def time_zone
 		if @time_zone.nil?
-			tweets.first.time_zone
+			tweets.first.truck.time_zone
 		else
 			@time_zone
 		end
@@ -81,7 +67,6 @@ class Event < ActiveRecord::Base
 
 	def time_zone= tz
 		@time_zone = tz
-		tweets.each {|t| t.time_zone = tz}
 		corrections.each {|c| c.time_zone = tz}
 		self
 	end
@@ -107,11 +92,11 @@ class Event < ActiveRecord::Base
 	end
 
 	def avatar_url
-		tweets.first.profile_image
+		tweets.first.truck.profile_image
 	end
 
 	def title
-		tweets.first.user
+		tweets.first.truck.name
 	end
 
 	protected
