@@ -9,16 +9,12 @@ class Event < ActiveRecord::Base
 
 	attr_accessor :distance, :time_zone
 
-	def self.find_today date, time_zone
-		where(time_clause(date, time_zone)).order(:start_time).each do |event|
-			event.time_zone = time_zone
-		end
-	end
-
 	def self.find_nearby sensor, range, date, time_zone
-		find_today(date, time_zone).select do |event|
+		clause = range_clause sensor, range
+		clause[:start_time] = same_day_clause date
+		where(clause).each do |event|
+			event.time_zone = time_zone
 			event.distance = haversine_distance sensor, event
-			event.distance < range
 		end.sort {|a, b| a.distance <=> b.distance}
 	end
 
@@ -104,10 +100,19 @@ class Event < ActiveRecord::Base
 	protected
 
 	def self.time_clause date, time_zone
+	def self.same_day_clause date
 		if date == "all"
 			return {}
 		end
 
-		{ :start_time => date.beginning_of_day..date.beginning_of_day + 1.day }
+		date.beginning_of_day..date.beginning_of_day + 1.day
+	end
+
+	def self.mi_to_coord_range center, mi
+		center - (mi * 0.02)..center + (mi * 0.02)
+	end
+
+	def self.range_clause sensor, range
+		{:latitude => mi_to_coord_range(sensor[:latitude], range), :longitude => mi_to_coord_range(sensor[:longitude], range)}
 	end
 end
