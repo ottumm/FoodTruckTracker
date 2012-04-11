@@ -71,10 +71,10 @@ class EventsController < ApplicationController
     end
   end
 
-  def find_or_create_tweet
+  def find_or_create_tweet truck
     tweet = Tweet.find_or_create_by_tweet_id params[:tweet][:tweet_id]
     tweet.update_attributes params[:tweet]
-    tweet.truck = find_or_create_truck
+    tweet.truck = truck
     tweet.save
     tweet
   end
@@ -85,15 +85,20 @@ class EventsController < ApplicationController
     truck
   end
 
+  def new_event_from_params
+    event = Event.new(params[:event])
+    event.truck = find_or_create_truck
+    event.add_tweet! find_or_create_tweet(event.truck)
+    event
+  end
+
   # POST /events
   # POST /events.json
   def create
-    @event = Event.new(params[:event])
-    @event.tweets.push find_or_create_tweet
+    @event = new_event_from_params
 
     respond_to do |format|
-      if @event.save
-        Event.merge_all!
+      if Event.merge_or_save! @event
         format.html { redirect_to @event, notice: 'Event was successfully created.' }
         format.json { render json: @event, status: :created, location: @event }
       else

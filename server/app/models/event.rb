@@ -1,9 +1,10 @@
 require 'haversine_distance'
 
 class Event < ActiveRecord::Base
-	has_many :notifications
-	has_many :corrections
+	has_many :notifications, :dependent => :destroy
+	has_many :corrections, :dependent => :destroy
 	has_many :tweets, :through => :notifications
+	belongs_to :truck
 
 	validates :location, :latitude, :longitude, :start_time, :end_time, :formatted_address, :presence => true
 
@@ -25,39 +26,30 @@ class Event < ActiveRecord::Base
 	end
 
 	def self.merge_all!
-		events = all.sort_by {|e| [e.title, e.location, e.start_time]}
-		prev = events.first
-		events.last(events.length - 1).each do |cur|
-			if !prev
-				prev = cur
-			elsif prev.merge! cur
-				logger.debug "Destroy #{cur.inspect}"
-				cur.destroy
-				prev = nil
-			else
-				prev = cur
+		all.each do |e|
+			if merge_event! e
+				logger.debug "Destroy #{e.inspect}"
+				e.destroy
 			end
 		end
 	end
 
-	def merge! event
-		if event.title == title && event.location == location && event.start_time.beginning_of_day == start_time.beginning_of_day
-			logger.debug "Merging #{title} - #{location} at #{start_time}"
-			event.tweets.each do |t|
-				if !tweets.include? t
-					logger.debug "  Push from #{event.id} to #{id} - #{location}"
-					tweets.push t
-				end
-			end
-			return true
+	def self.merge_or_save! event
+		if !merge_event! event
+			event.save
 		end
 
-		false
+		event
+	end
+
+	def merge! event
+		logger.debug "Merging #{event.title} - #{event.location} into #{title} - #{location} at #{start_time}"
+		event.tweets.each {|t| add_tweet! t}
 	end
 
 	def time_zone
 		if @time_zone.nil?
-			tweets.first.truck.time_zone
+			truck.time_zone
 		else
 			@time_zone
 		end
@@ -90,16 +82,31 @@ class Event < ActiveRecord::Base
 	end
 
 	def avatar_url
-		tweets.first.truck.profile_image
+		truck.profile_image
 	end
 
 	def title
-		tweets.first.truck.name
+		truck.name
+	end
+
+	def add_tweet! tweet
+		if !tweets.include? tweet
+			tweets.push tweet
+		end
 	end
 
 	protected
 
-	def self.time_clause date, time_zone
+	def self.merge_event! event
+		merged = false
+		where(:truck_id => event.truck.id, :latitude => event.latitude, :longitude => event.longitude, :start_time => same_day_clause(event.start_time)).where(event.id.nil? ? "id is not ?" : "id != ?", event.id).each do |e|
+			merged = true
+			e.merge! event
+		end
+
+		merged
+	end
+
 	def self.same_day_clause date
 		if date == "all"
 			return {}

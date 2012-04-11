@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120407041749) do
+ActiveRecord::Schema.define(:version => 20120410052409) do
 
   create_table "corrections", :force => true do |t|
     t.integer  "event_id",          :null => false
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(:version => 20120407041749) do
     t.string   "formatted_address"
     t.boolean  "verified"
     t.integer  "correction_id"
+    t.integer  "truck_id"
   end
 
   create_table "notifications", :force => true do |t|

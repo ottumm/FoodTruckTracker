@@ -30,6 +30,6 @@
 
 <%= javascript_tag do -%>
   var sensor = <%= @sensor.to_json.html_safe %>;
-  var events = <%= @events.to_json(:only => [:latitude, :longitude], :include => { :tweets => { :include => :truck, :only => [:tweet_id] } }).html_safe %>;
+  var events = <%= @events.to_json(:only => [:latitude, :longitude], :include => :truck).html_safe %>;
   window.onload = function() { loadGoogleMapsAPI("initializeMap"); }
 <% end -%>

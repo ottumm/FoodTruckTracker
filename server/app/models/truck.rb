@@ -3,6 +3,7 @@ require 'default_time_zone'
 class Truck < ActiveRecord::Base
 	has_many :postings
 	has_many :tweets, :through => :postings
+	has_many :events
 
 	def profile_image
 		if super.nil?
@@ -24,6 +25,13 @@ class Truck < ActiveRecord::Base
 			return default_time_zone
 		end
  
-		super
+		tz = super
+
+		begin
+			Time.now.in_time_zone tz
+			return tz
+		rescue
+			return default_time_zone
+		end
 	end
 end
