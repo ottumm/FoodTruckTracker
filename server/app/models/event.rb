@@ -43,7 +43,6 @@ class Event < ActiveRecord::Base
 	end
 
 	def merge! event
-		logger.debug "Merging #{event.title} - #{event.location} into #{title} - #{location} at #{start_time}"
 		event.tweets.each {|t| add_tweet! t}
 	end
 
@@ -97,9 +96,14 @@ class Event < ActiveRecord::Base
 
 	protected
 
+	def self.dist_clause n
+		n-0.001..n+0.001
+	end
+
 	def self.merge_event! event
 		merged = false
-		where(:truck_id => event.truck.id, :latitude => event.latitude, :longitude => event.longitude, :start_time => same_day_clause(event.start_time)).where(event.id.nil? ? "id is not ?" : "id != ?", event.id).each do |e|
+
+		where(:truck_id => event.truck.id, :latitude => dist_clause(event.latitude), :longitude => dist_clause(event.longitude), :start_time => same_day_clause(event.start_time)).where(event.id.nil? ? "id is not ?" : "id != ?", event.id).limit(1).each do |e|
 			merged = true
 			e.merge! event
 		end
