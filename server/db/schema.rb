@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120410052409) do
+ActiveRecord::Schema.define(:version => 20120412063853) do
 
   create_table "corrections", :force => true do |t|
     t.integer  "event_id",          :null => false
@@ -38,6 +38,10 @@ ActiveRecord::Schema.define(:version => 20120410052409) do
     t.integer  "correction_id"
     t.integer  "truck_id"
   end
+
+  add_index "events", ["latitude"], :name => "index_events_on_latitude"
+  add_index "events", ["longitude"], :name => "index_events_on_longitude"
+  add_index "events", ["start_time"], :name => "index_events_on_start_time"
 
   create_table "notifications", :force => true do |t|
     t.integer  "tweet_id"
