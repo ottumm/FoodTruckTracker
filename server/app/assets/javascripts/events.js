@@ -23,7 +23,7 @@ function initializeMap() {
 			map: map,
 			title: events[i].truck.name
 		});
-		var image = new google.maps.MarkerImage(smallProfileImage(events[i].truck.profile_image));
+		var image = new google.maps.MarkerImage(smallProfileImage(events[i].truck.profile_image), null, null, null, new google.maps.Size(24,24));
 		marker.setIcon(image);
 		marker.setAnimation(google.maps.Animation.DROP);
 	}
