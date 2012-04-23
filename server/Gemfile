@@ -33,6 +33,10 @@ gem 'rspec'
 gem 'tzinfo'
 gem 'mysql2'
 
+group :development do
+	gem 'quiet_assets'
+end
+
 group :production do
 end
 
