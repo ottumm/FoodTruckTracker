@@ -5,6 +5,10 @@ class Truck < ActiveRecord::Base
 	has_many :tweets, :through => :postings
 	has_many :events
 
+	def url
+		"http://twitter.com/#{name}"
+	end
+
 	def profile_image
 		if super.nil?
 			logger.debug "Fetching profile image url for #{name}"

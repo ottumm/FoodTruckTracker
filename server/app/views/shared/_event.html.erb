@@ -4,14 +4,15 @@
   </div>
   <div class="event-inner">
     <div class="event-information">
-      <span class="event-name"><%= event.title %></span>
-      -
-      <span class="event-details">
-        <%= link_to event.location, event.map_url %> 
+      <div class="event-name">
+        <%= link_to event.title, event.truck.url %>
         <% if event.distance %>
-          (<%= event.formatted_distance %> away)
+          (<%= event.formatted_distance %>)
         <% end %>
-      </span>
+      </div>
+      <div class="event-location">
+        <%= link_to event.location, event.map_url %> 
+      </div>
     </div>
     <div class="event-tweets">
       <%= render :partial => "shared/tweet", :locals => { :tweet => event.tweets.first } %>
