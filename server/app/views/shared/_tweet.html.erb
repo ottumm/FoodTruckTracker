@@ -1,4 +1,6 @@
-<div class="event-tweet-quote">“</div>
 <div class="event-tweet">
-	<%= tweet.text %> <%= link_to tweet.formatted_timestamp, tweet.url %>
+	<%= tweet.text %>
+</div>
+<div class="event-tweet event-tweet-timestamp">
+	<%= link_to tweet.formatted_timestamp, tweet.url %>
 </div>

@@ -85,22 +85,21 @@ div.event-tweets:after {
 	visibility: hidden;
 }
 
+div.extra-tweets:before {
+	content: '.';
+	display: block;
+	clear:both;
+	height: 0;
+	visibility: hidden;
+}
+
 div.event-tweet {
-	margin-left: 25px;
 	font-size: @baseFontSize - 2;
 	line-height: @baseLineHeight - 2;
 }
 
-div.event-tweet a {
-	text-wrap: none;
-}
-
-div.event-tweet-quote {
+div.event-tweet-timestamp {
 	float: left;
-	font-size: 60px;
-	line-height: 55px;
-	font-family: Georgia;
-	color: #AAA;
 }
 
 #map-canvas {
