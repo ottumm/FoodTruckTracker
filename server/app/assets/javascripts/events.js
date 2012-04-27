@@ -13,9 +13,10 @@ function initializeMap() {
 	new google.maps.Marker({
 		position: new google.maps.LatLng(sensor.latitude, sensor.longitude),
 		map: map,
-		title: "Current Location",
-		animation: google.maps.Animation.DROP
+		title: "Current Location"
 	});
+
+	var infowindow = new google.maps.InfoWindow({maxWidth: 320});
 
 	for(var i=0; i<events.length; i++) {
 		var marker = new google.maps.Marker({
@@ -26,6 +27,15 @@ function initializeMap() {
 		var image = new google.maps.MarkerImage(smallProfileImage(events[i].truck.profile_image), null, null, null, new google.maps.Size(24,24));
 		marker.setIcon(image);
 		marker.setAnimation(google.maps.Animation.DROP);
+
+		google.maps.event.addListener(marker, 'click', (function(marker, i) {
+			return function() {
+				var info = '<div class="map-info">' + $($('.event')[i]).html() + '</div>'
+				infowindow.setContent(info);
+				infowindow.open(map, marker);
+				$('.map-info').css('overflow', 'hidden');
+			}
+		})(marker, i));
 	}
 }
 
