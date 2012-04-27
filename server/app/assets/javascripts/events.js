@@ -26,7 +26,6 @@ function initializeMap() {
 		});
 		var image = new google.maps.MarkerImage(smallProfileImage(events[i].truck.profile_image), null, null, null, new google.maps.Size(24,24));
 		marker.setIcon(image);
-		marker.setAnimation(google.maps.Animation.DROP);
 
 		google.maps.event.addListener(marker, 'click', (function(marker, i) {
 			return function() {
