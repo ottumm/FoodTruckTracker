@@ -34,6 +34,7 @@ function initializeMap() {
 				infowindow.setContent(info);
 				infowindow.open(map, marker);
 				$('.map-info').css('overflow', 'hidden');
+				$('.map-info .tweet-toggle').css('visibility', 'hidden');
 			}
 		})(marker, i));
 	}
