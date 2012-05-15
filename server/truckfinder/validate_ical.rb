@@ -13,14 +13,8 @@ doc = Nokogiri::HTML(res.body)
 errors = doc.css(".parse-error td")
 exit unless errors.length > 0
 
-errors.each do |error|
-	$stderr.puts error.content
-end
-
+errors.each {|e| $stderr.puts e.content}
 puts
 
-doc.css(".context tr").each do |line|
-	$stderr.puts "#{line.children[0].content}\t#{line.children[2].content}"
-end
-
+doc.css(".context tr").each {|l| $stderr.puts "#{line.children[0].content}\t#{line.children[2].content}"}
 abort
