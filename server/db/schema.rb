@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120412063853) do
+ActiveRecord::Schema.define(:version => 20120529064037) do
 
   create_table "corrections", :force => true do |t|
     t.integer  "event_id",          :null => false
@@ -43,6 +43,15 @@ ActiveRecord::Schema.define(:version => 20120412063853) do
   add_index "events", ["longitude"], :name => "index_events_on_longitude"
   add_index "events", ["start_time"], :name => "index_events_on_start_time"
 
+  create_table "geocaches", :force => true do |t|
+    t.string   "text"
+    t.text     "result"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "geocaches", ["text"], :name => "index_geocaches_on_text"
+
   create_table "notifications", :force => true do |t|
     t.integer  "tweet_id"
     t.integer  "event_id"
@@ -63,6 +72,16 @@ ActiveRecord::Schema.define(:version => 20120412063853) do
     t.float    "longitude"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "sources", :force => true do |t|
+    t.string   "user"
+    t.string   "name"
+    t.string   "location"
+    t.integer  "last_seen_id", :limit => 8
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+    t.string   "time_zone"
   end
 
   create_table "trucks", :force => true do |t|

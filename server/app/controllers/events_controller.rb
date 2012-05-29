@@ -71,43 +71,6 @@ class EventsController < ApplicationController
     end
   end
 
-  def find_or_create_tweet truck
-    tweet = Tweet.find_or_create_by_tweet_id params[:tweet][:tweet_id]
-    tweet.update_attributes params[:tweet]
-    tweet.truck = truck
-    tweet.save
-    tweet
-  end
-
-  def find_or_create_truck
-    truck = Truck.find_or_create_by_name params[:truck][:name]
-    truck.update_attributes params[:truck]
-    truck
-  end
-
-  def new_event_from_params
-    event = Event.new(params[:event])
-    event.truck = find_or_create_truck
-    event.add_tweet! find_or_create_tweet(event.truck)
-    event
-  end
-
-  # POST /events
-  # POST /events.json
-  def create
-    @event = new_event_from_params
-
-    respond_to do |format|
-      if Event.merge_or_save! @event
-        format.html { redirect_to @event, notice: 'Event was successfully created.' }
-        format.json { render json: @event, status: :created, location: @event }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @event.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
   # POST /events/1/correct
   # POST /events/1/correct.json
   def correct

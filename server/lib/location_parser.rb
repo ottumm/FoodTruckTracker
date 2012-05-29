@@ -32,7 +32,7 @@ class LocationParser
 	        	return { :loc => loc, :geo => geo }
 	        end
 
-	        puts "Matched \"#{loc}\", which did not geocode"
+	        Rails.logger.debug "Matched \"#{loc}\", which did not geocode"
 	      end
 	    end
 
@@ -40,7 +40,7 @@ class LocationParser
 	end
 
 	def self.phrase_parser text, opts
-		puts "Using phrase parser on \"#{text}\""
+		Rails.logger.debug "Using phrase parser on \"#{text}\""
 
 		get_all_phrases(text, :downto => 2).each do |phrase|
 			geo = Geo.code phrase, opts

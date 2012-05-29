@@ -1,133 +1,90 @@
-require 'rubygems'
-require 'bundler/setup'
-require 'json'
-require 'optparse'
-require "#{File.dirname(__FILE__)}/ical"
-require "#{File.dirname(__FILE__)}/event_logger"
-require "#{File.dirname(__FILE__)}/tweet_parser"
-require "#{File.dirname(__FILE__)}/geo"
-require "#{File.dirname(__FILE__)}/post_to_server"
+require "tweet_parser"
 
-task :find_trucks => :environment
-  logger = EventLogger.new
-  filter = options[:cal_filter]
-  filtered_cal = ICal.create :name => options[:cal_name]
+task :find_trucks => :environment do
   already_seen = Set.new
-  
-  lists.each do |list|
-    ICal.merge_into!(filtered_cal, get_calendar(list, filter, logger, options[:server], already_seen))
-  end
-
-  ICal.to_file(filtered_cal, options[:output])
-  logger.write_to_dir(options[:tweet_dir])
-  if logger.tweets.length > 0
-    File.open("data/log.txt", "a") {|f| f.puts "#{Time.now} : #{logger.tweets.length} new tweets"}
-  end
+  Source.all.each {|s| add_events_from_source s, already_seen}
 end
 
-def get_list_name(list)
-  "#{list['user']}-#{list['name']}"
-end
-
-def get_calendar(list, filter, logger, server, already_seen)
-  calendar = timeline_to_ical list, logger, server, already_seen
-  ICal.filter calendar, filter, get_list_name(list)
-end
-
-def timeline_to_ical(list, logger, server, already_seen)
-  cal = get_twitter_calendar list
-  last_tweet_id = get_last_tweet_id list
+def add_events_from_source source, already_seen
   latest_tweet_id = 0
 
-  fetch_tweets(list, last_tweet_id).each do |tweet|
+  fetch_tweets(source).each do |tweet|
     if already_seen.include? tweet.id
       next
     end
 
+    Rails.logger.debug "#{tweet.user.screen_name} - #{tweet.text}"
+
     already_seen.add tweet.id
-    latest_tweet_id = tweet.id unless tweet.id < latest_tweet_id
-    logger.log(tweet.user.screen_name, tweet)
-    TweetParser.events(CGI.unescapeHTML(tweet.text), tweet.created_at, tweet_timezone(tweet), tweet_location(tweet)).each do |event|
-      event[:name]          = "@#{tweet.user.screen_name}"
-      event[:end]           = event[:time] + 2.hours
-      event[:description]   = tweet.text
-      event[:creation_time] = tweet.created_at
-      event[:tweet_id]      = tweet.id
+    latest_tweet_id  = tweet.id unless tweet.id < latest_tweet_id
+    time_zone        = tweet_timezone tweet, source
+    default_location = tweet_location tweet, source
 
-      geocode = Geo.code event[:loc], :near => "Emeryville, CA, USA"
-      if geocode
-        event[:latitude]          = geocode["geometry"]["location"]["lat"]
-        event[:longitude]         = geocode["geometry"]["location"]["lng"]
-        event[:formatted_address] = geocode["formatted_address"]
-        post_event_to_server server, event, tweet
-
-        cal.event do
-          dtstart     event[:time].to_datetime
-          dtend       event[:end].to_datetime
-          summary     event[:name]
-          location    event[:loc]
-          description "#{tweet.created_at} - #{event[:description]}\n#{tweet_url(tweet)}"
-        end
-      end
+    TweetParser.events(CGI.unescapeHTML(tweet.text), tweet.created_at, time_zone, default_location).each do |event|
+      truck = add_truck Truck.new(:name => tweet.user.screen_name, :time_zone => time_zone)
+      tweet = add_tweet tweet_to_active_record(tweet), truck
+      add_event truck, tweet, event
     end
   end
 
   if latest_tweet_id > 0
-    Dir.mkdir cals_dir unless Dir.exists? cals_dir
-    ICal.to_file cal, twitter_calendar_path(get_list_name list)
-    File.open(last_tweet_id_path(get_list_name list), 'w') {|f| f.write latest_tweet_id}
+    source.last_seen_id = latest_tweet_id
+    source.save
   end
-
-  return cal
 end
 
-def get_last_tweet_id(list)
-  file = last_tweet_id_path(get_list_name list)
-  if File.exists? file
-    return File.open(file).read
+def tweet_to_active_record tweet
+  Tweet.new :tweet_id => tweet.id, :text => tweet.text, :timestamp => tweet.created_at
+end
+
+def add_truck t
+  existing = Truck.find_by_name t.name
+  if !existing
+    Rails.logger.debug "\tAdding truck: #{t.name}"
+    t.save
+    t
+  else
+    existing
   end
-
-  return nil
 end
 
-def cals_dir
-  return "data"
-end
-
-def last_tweet_id_path(name)
-  return "#{cals_dir}/#{name}.tweet"
-end
-
-def twitter_calendar_path(name)
-  return "#{cals_dir}/#{name}.ics"
-end
-
-def get_twitter_calendar(name)
-  cal_file = twitter_calendar_path name
-  if File.exists? cal_file
-    begin
-      return Icalendar::parse(File.open(cal_file).read).first
-    rescue Exception => e
-      $stderr.puts "#{e.message} in #{cal_file}"
-    end
+def add_tweet tweet, truck
+  existing = Tweet.find_by_tweet_id tweet.tweet_id
+  if !existing
+    Rails.logger.debug "\tAdding tweet by #{truck.name}: #{tweet.tweet_id}"
+    tweet.truck = truck
+    tweet.save
+    tweet
+  else
+    existing
   end
-
-  return ICal.create
-end    
-
-def tweet_timezone(tweet)
-  return (tweet.user.time_zone or "Pacific Time (US & Canada)")
 end
 
-def tweet_location(tweet)
-  return tweet.place ? tweet.place.full_name : "San Francisco, CA"
+def add_event truck, tweet, event
+  event.truck = truck
+  existing = Event.find_by_truck_id_and_location_and_start_time truck.id, event.location, event.start_time
+  if !existing
+    Rails.logger.debug "\tAdding event: #{event.inspect}"
+    event.add_tweet! tweet
+    event.save
+    event
+  else
+    Rails.logger.debug "\tAdding tweet to existing event: #{tweet.id}"
+    existing.add_tweet! tweet
+    existing.save
+    existing
+  end
 end
 
-def tweet_url(tweet)
-  return "http://twitter.com/#{tweet.user.screen_name}/status/#{tweet.id}"
+def tweet_timezone tweet, source
+  (tweet.user.time_zone or source.time_zone)
 end
 
-def fetch_tweets(list, since_id)
-  puts "Fetching timeline for #{get_list_name list} since #{since_id}"
-  return Twitter.list_timeline(list["user"], list["name"], {:since_id => (since_id or 1)})
+def tweet_location tweet, source
+  tweet.place ? tweet.place.full_name : source.location
+end
+
+def fetch_tweets source
+  Rails.logger.debug "Fetching timeline for #{source.user}/#{source.name} since #{source.last_seen_id}"
+  Twitter.list_timeline source.user, source.name, {:since_id => (source.last_seen_id or 1)}
 end

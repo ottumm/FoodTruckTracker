@@ -1,5 +1,5 @@
-require "#{File.dirname(__FILE__)}/time_parser"
-require "#{File.dirname(__FILE__)}/location_parser"
+require "time_parser"
+require "location_parser"
 
 class TweetParser
   def self.events(text, created_at, time_zone, near)
@@ -15,7 +15,7 @@ class TweetParser
       events.push(event) unless event.nil?
     end
 
-    return events
+    events
   end
 
   private
@@ -35,7 +35,13 @@ class TweetParser
     return nil if loc.nil?
     time = TimeParser.parse loc[:remaining], created_at, time_zone
     return nil if time.nil?
-    return {:time => time, :loc => loc[:loc]}
+
+    Event.new :location          => loc[:loc],
+              :latitude          => loc[:geo]["geometry"]["location"]["lat"],
+              :longitude         => loc[:geo]["geometry"]["location"]["lng"],
+              :formatted_address => loc[:geo]["formatted_address"],
+              :start_time        => time,
+              :end_time          => time + 2.hours
   end
 
   def self.split_events(text)

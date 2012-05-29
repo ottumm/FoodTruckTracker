@@ -18,40 +18,40 @@ class TimeParser
       end
     end
 
-    return composite_time
+    composite_time
   end
 
   private
 
   def self.specific_day?(time, created_at)
-    return !time.nil? && (time.hour == 12 || time.day != created_at.day)
+    !time.nil? && (time.hour == 12 || time.day != created_at.day)
   end
 
   def self.specific_time?(time)
-    return !time.nil? && time.hour != 12 && time.hour != 0 && time.hour >= 11 && time.hour <= 21
+    !time.nil? && time.hour != 12 && time.hour != 0 && time.hour >= 11 && time.hour <= 21
   end
 
   def self.use_time?(time, other, created_at)
-    return other.nil? || (specific_time?(time) && specific_day?(time, created_at))
+    other.nil? || (specific_time?(time) && specific_day?(time, created_at))
   end
 
   def self.combine_times(t1, t2, created_at)
     return t2 if use_time?(t2, t1, created_at)
 
     if specific_day?(t2, created_at)
-      return t1.clone.change({:day => t2.day})
+      t1.clone.change({:day => t2.day})
     elsif specific_time?(t2)
-      return t1.clone.change({:hour => t2.hour, :min => t2.min})
+      t1.clone.change({:hour => t2.hour, :min => t2.min})
     else
-      return t1.nil? ? nil : t1.clone
+      t1.nil? ? nil : t1.clone
     end
   end
 
   def self.parse_with_chronic(*args)
     begin
-      return Chronic.parse(*args)
+      Chronic.parse(*args)
     rescue NoMethodError => e
-      return nil
+      nil
     end
   end
 
@@ -64,6 +64,6 @@ class TimeParser
       time = created_at.clone.change({:hour => 18})
     end
 
-    return time
+    time
   end
 end
