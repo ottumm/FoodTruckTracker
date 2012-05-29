@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>User:</b>
+  <%= @source.user %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @source.name %>
+</p>
+
+<p>
+  <b>Location:</b>
+  <%= @source.location %>
+</p>
+
+<p>
+  <b>Time zone:</b>
+  <%= @source.time_zone %>
+</p>
+
+<p>
+  <b>Last seen:</b>
+  <%= @source.last_seen_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_source_path(@source) %> |
+<%= link_to 'Back', sources_path %>

@@ -1,0 +1,31 @@
+<h1>Listing sources</h1>
+
+<table>
+  <tr>
+    <th>User</th>
+    <th>Name</th>
+    <th>Location</th>
+    <th>Time zone</th>
+    <th>Last seen</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @sources.each do |source| %>
+  <tr>
+    <td><%= source.user %></td>
+    <td><%= source.name %></td>
+    <td><%= source.location %></td>
+    <td><%= source.time_zone %></td>
+    <td><%= source.last_seen_id %></td>
+    <td><%= link_to 'Show', source %></td>
+    <td><%= link_to 'Edit', edit_source_path(source) %></td>
+    <td><%= link_to 'Destroy', source, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Source', new_source_path %>
