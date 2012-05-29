@@ -8,7 +8,7 @@ require "#{File.dirname(__FILE__)}/tweet_parser"
 require "#{File.dirname(__FILE__)}/geo"
 require "#{File.dirname(__FILE__)}/post_to_server"
 
-def main(options, lists)
+task :find_trucks => :environment
   logger = EventLogger.new
   filter = options[:cal_filter]
   filtered_cal = ICal.create :name => options[:cal_name]
@@ -131,23 +131,3 @@ def fetch_tweets(list, since_id)
   puts "Fetching timeline for #{get_list_name list} since #{since_id}"
   return Twitter.list_timeline(list["user"], list["name"], {:since_id => (since_id or 1)})
 end
-
-options = {}
-optparse = OptionParser.new do |opts|
-  opts.banner = "Usage: find_trucks.rb [options...]"
-  opts.on("-c", "--config [FILE]",   "Config file")         { |c| options[:config]     = c }
-  opts.on("-o", "--cal [FILE]",      "Output to iCal file") { |o| options[:output]     = o }
-  opts.on("-f", "--filter [REGEX]",  "Filter by REGEX")     { |f| options[:cal_filter] = f }
-  opts.on("-n", "--name [NAME]",     "Calendar name")       { |n| options[:cal_name]   = n }
-  opts.on("-d", "--tweet-dir [DIR]", "Log tweets here")     { |d| options[:tweet_dir]  = d }
-  opts.on("-s", "--server [URL]",    "POST tweets here")    { |s| options[:server]     = s }
-  opts.on("-h", "--help",            "Display this screen") { puts opts or exit }
-end.parse!
-
-options[:config]     = "find_trucks.config" unless options[:config]
-c = JSON.parse(File.open(options[:config], "r").read)
-options[:cal_name]   = c["cal"]["name"]     unless options[:cal_name]
-options[:cal_filter] = c["cal"]["filter"]   unless options[:cal_filter]
-options[:server]     = c["server"]          unless options[:server]
-
-main(options, c["lists"])
