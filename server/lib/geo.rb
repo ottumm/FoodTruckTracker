@@ -11,9 +11,8 @@ class Geo
 
 		address = "#{address} near #{opts[:near]}"
 
-		unless (cached = Geocache.find_by_text address).nil?
-			Rails.logger.debug "geocode cache hit \"#{address}\""
-			return cached.result
+		unless (cached = cache_lookup address).nil?
+			return cached
 		end
 
 		reference = reference_location(opts[:near])
@@ -30,18 +29,28 @@ class Geo
 
 	private
 
-	def self.result_valid?(res, near)
-		valid = !res["formatted_address"].start_with?(near)# && !res["types"].include?("point_of_interest")
-		if !valid
-			Rails.logger.debug "Invalid result: #{res['formatted_address']}"
+	def self.cache_lookup address
+		cached = Geocache.find_by_text address
+		if cached
+			if Time.now - cached.created_at > 2.months
+				cached.destroy
+				nil
+			else
+				Rails.logger.debug "geocode cache hit \"#{address}\" : #{cached.result}"
+				cached.result
+			end
+		else
+			nil
 		end
-		valid
 	end
 
-	def self.reference_location(address)
-		unless (cached = Geocache.find_by_text address).nil?
-			Rails.logger.debug "geocode cache hit \"#{address}\" : #{cached.result}"
-			return cached.result
+	def self.result_valid? res, near
+		!res["formatted_address"].start_with?(near)# && !res["types"].include?("point_of_interest")
+	end
+
+	def self.reference_location address
+		unless (cached = cache_lookup address).nil?
+			return cached
 		end
 
 		location = geocode_address(address).first
@@ -50,17 +59,16 @@ class Geo
 	end
 
 	def self.coords(l)
-		Rails.logger.debug "coords: #{l}"
 		{ :latitude => l["geometry"]["location"]["lat"], :longitude => l["geometry"]["location"]["lng"] }
 	end
 
-	def self.normalize(address)
+	def self.normalize address
 		ret = address.gsub /\/|&|\+/, " and "
 		ret.gsub /\s\s/, " "
 		ret.gsub /\b\d\d?:\d\d\b/, ""
 	end
 
-	def self.geocode_address(address, opts={})
+	def self.geocode_address address, opts={}
 		Rails.logger.debug "geocode: #{address}"
 		r = RestClient.get 'http://maps.googleapis.com/maps/api/geocode/json', :params => {:address => address, :sensor => "false"}
 		o = JSON.parse(r.to_s)
