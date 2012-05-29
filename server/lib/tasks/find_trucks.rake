@@ -25,9 +25,7 @@ def add_events_from_source source, already_seen
       tweet = add_tweet tweet_to_active_record(tweet), truck
       add_event truck, tweet, event
     end
-  end
 
-  if latest_tweet_id > 0
     source.last_seen_id = latest_tweet_id
     source.save
   end
