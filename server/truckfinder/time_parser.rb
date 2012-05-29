@@ -3,6 +3,7 @@ require 'rubygems'
 require 'chronic'
 require 'active_support/core_ext/numeric/time'
 require 'active_support/time'
+require "#{File.dirname(__FILE__)}/get_all_phrases"
 
 class TimeParser
   def self.parse(text, created_at, time_zone)
@@ -64,17 +65,5 @@ class TimeParser
     end
 
     return time
-  end
-
-  def self.get_all_phrases(text)
-    phrases = []
-    words = text.split(/\s+|\: |-(?:\d|:)*/)
-    words.length.downto(1) do |len|
-      0.upto(words.length - len) do |start|
-        phrases.push(words.slice(start, len).join(" "))
-      end
-    end
-    
-    return phrases
   end
 end

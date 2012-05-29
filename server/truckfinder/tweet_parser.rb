@@ -2,16 +2,16 @@ require "#{File.dirname(__FILE__)}/time_parser"
 require "#{File.dirname(__FILE__)}/location_parser"
 
 class TweetParser
-  def self.events(text, created_at, time_zone)
+  def self.events(text, created_at, time_zone, near)
     normalized_text = normalize text
     events = []
     split_events(normalized_text).each do |event_text|
-      event = parse_time_and_location(event_text, created_at, time_zone)
+      event = parse_time_and_location(event_text, created_at, time_zone, near)
       events.push(event) unless event.nil?
     end
 
     if events.empty?
-      event = parse_time_and_location(normalized_text, created_at, time_zone)
+      event = parse_time_and_location(normalized_text, created_at, time_zone, near)
       events.push(event) unless event.nil?
     end
 
@@ -30,10 +30,11 @@ class TweetParser
     return ret
   end
 
-  def self.parse_time_and_location(text, created_at, time_zone)
-    loc  = LocationParser.parse text
+  def self.parse_time_and_location(text, created_at, time_zone, near)
+    loc  = LocationParser.parse text, :near => near
+    return nil if loc.nil?
     time = TimeParser.parse loc[:remaining], created_at, time_zone
-    return nil if time.nil? || loc[:loc].nil?
+    return nil if time.nil?
     return {:time => time, :loc => loc[:loc]}
   end
 

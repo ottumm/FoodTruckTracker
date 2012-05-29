@@ -178,3 +178,5 @@ Sun Feb 12 12:35:00 -0800 2012	Schedule: WED 64th&Hollis lunch, N. Berkeley dinn
 	Wed Feb 15 12:00:00 -0800 2012	64th&Hollis	geo
 	Thu Feb 16 12:00:00 -0800 2012	2100 Powell Eville
 	Fri Feb 17 12:00:00 -0800 2012	SF Civic Ctr
+Wed Mar 14 10:59:00 -0700 2012	We r serving 2day cuz we love u! 64th&Hollis. 11:30-1:30 or til we float away - whichever comes 1st. #fb
+	Wed Mar 14 11:30 -0700 2012	64th&Hollis

@@ -1,13 +1,16 @@
+require "#{File.dirname(__FILE__)}/geo"
+require "#{File.dirname(__FILE__)}/get_all_phrases"
+
 class LocationParser
-	def self.parse(text)
-		remaining_text = text.clone
-		loc = consume_location! remaining_text
-		{:loc => loc, :remaining => remaining_text}
+	def self.parse text, opts
+		loc = self.regex_parser text, opts
+		loc[:remaining] = text.gsub /#{Regexp.escape loc[:loc]}/, '' unless loc.nil?
+		loc
 	end
 
 	private
 
-	def self.consume_location!(text)
+	def self.regex_parser text, opts
 	    time         = '\d\d?(?:\d\d)?(?:am?|pm?)'
 	    time_range   = "#{time}-#{time}"
 	    loc_prefix   = '(?:@|at\\s|on\\s|[:\\.]\\s+)'
@@ -23,12 +26,29 @@ class LocationParser
 	      match = pattern.match(text)
 	      if !match.nil? && !match[1].nil?
 	        loc = match[1]
-	        loc.gsub! /#{loc_suffix}/i, ''
-	        text.gsub! /#{Regexp.escape loc}/, ''
-	        return loc
+	        loc.gsub! /#{Regexp.escape loc_suffix}/, ''
+	        geo = Geo.code loc, opts
+	        if geo
+	        	return { :loc => loc, :geo => geo }
+	        end
+
+	        puts "Matched \"#{loc}\", which did not geocode"
 	      end
 	    end
 
-	    return nil
+	    nil
+	end
+
+	def self.phrase_parser text, opts
+		puts "Using phrase parser on \"#{text}\""
+
+		get_all_phrases(text, :downto => 2).each do |phrase|
+			geo = Geo.code phrase, opts
+			if geo
+				return { :loc => phrase, :geo => geo }
+			end
+		end
+
+		nil
 	end
 end
