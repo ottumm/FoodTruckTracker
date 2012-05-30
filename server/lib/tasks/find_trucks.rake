@@ -32,7 +32,7 @@ def add_events_from_source source, already_seen
 end
 
 def tweet_to_active_record tweet
-  Tweet.new :tweet_id => tweet.id, :text => tweet.text, :timestamp => tweet.created_at
+  Tweet.new :tweet_id => tweet.id, :text => CGI.unescapeHTML(tweet.text), :timestamp => tweet.created_at
 end
 
 def add_truck t
