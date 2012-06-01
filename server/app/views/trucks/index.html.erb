@@ -1,0 +1,17 @@
+<h1>Listing Trucks</h1>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Most Recent Location</th>
+  </tr>
+
+<% @trucks.each do |truck| %>
+  <tr>
+    <td><%= truck.id %></td>
+    <td><%= truck.name %></td>
+    <td><%= truck.current_location %></td>
+  </tr>
+<% end %>
+</table>

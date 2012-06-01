@@ -6,6 +6,7 @@ Server::Application.routes.draw do
   post '/events/:id/correct' => 'events#correct', :as => 'correct_event'
 
   resources :corrections
+  resources :trucks
 
   # See how all your routes lay out with "rake routes"
 end

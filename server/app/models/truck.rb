@@ -5,6 +5,15 @@ class Truck < ActiveRecord::Base
 	has_many :tweets, :through => :postings
 	has_many :events
 
+	def current_location
+		event = most_recent_event
+		event.nil? ? "(none)" : event.formatted_address
+	end
+
+	def most_recent_event
+		events.sort {|a,b| b.start_time <=> a.start_time}.first
+	end
+
 	def url
 		"http://twitter.com/#{name}"
 	end

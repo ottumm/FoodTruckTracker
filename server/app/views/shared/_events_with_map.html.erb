@@ -1,0 +1,27 @@
+<div class="events">
+  <div class="date-control">
+    <% if @previous_day_path %>
+      <%= link_to "«", @previous_day_path %>
+    <% end %>
+    <%= @current_date %>
+    <% if @next_day_path %>
+      <%= link_to "»", @next_day_path %>
+    <% end %>
+  </div>
+  <%= render :partial => "shared/event", :collection => @events %>
+  <% if @events.empty? %>
+    No food trucks found.
+  <% end %>
+  <div class="range-control">
+    <%= link_to "[-]", @decrease_range_path %>
+    <%= @sensor[:range] %> mile range
+    <%= link_to "[+]", @increase_range_path %>
+  </div>
+</div>
+<% if !params[:mobile] %>
+  <div class="map">
+    <div id="map-canvas"></div>
+  </div>
+
+  <%= render :partial => "shared/eventmap", :locals => { :sensor => @sensor, :events => @events } %>
+<% end %>
