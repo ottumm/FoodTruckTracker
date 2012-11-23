@@ -3,21 +3,20 @@ def haversine_distance(p1, p2)
 		angle/180 * Math::PI
 	end
 
-	def sin2 r
-		Math.sin(r) * Math.sin(r)
-	end
+	lat1 = p1[:latitude]  or p1.latitude
+	lon1 = p1[:longitude] or p1.longitude
+	lat2 = p2[:latitude]  or p2.latitude
+	lon2 = p2[:longitude] or p2.longitude
 
-	def cos2 r
-		Math.cos(r) * Math.cos(r)
-	end
+	lat1 = to_rad lat1
+	lon1 = to_rad lon1
+	lat2 = to_rad lat2
+	lon2 = to_rad lon2
 
-	radius = 6371 # km
-	d_lat = to_rad(p2[:latitude] - p1[:latitude])
-	d_lon = to_rad(p2[:longitude] - p1[:longitude])
-	lat1 = to_rad p1[:latitude]
-	lat2 = to_rad p2[:latitude]
-
-	a = sin2(d_lat/2) + sin2(d_lon/2) * Math.cos(lat1) * Math.cos(lat2)
+	radius = 3961 # mi
+	dlon = lon2 - lon1
+	dlat = lat2 - lat1
+	a = Math.sin(dlat/2)**2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dlon/2)**2
 	c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
-	radius * c * 0.621371192 # to miles
+	radius * c
 end
