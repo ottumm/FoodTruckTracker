@@ -14,8 +14,8 @@ class TrucksController < ApplicationController
   # GET /trucks/1.json
   def show
     @truck  = Truck.find params[:id]
-    @events = @truck.events.sort {|a,b| b.start_time <=> a.start_time}
-    @sensor = @sensor = { :latitude => @events.first.latitude, :longitude => @events.first.longitude, :range => 10 }
+    @events = @truck.all_locations :range_limit => 100
+    @center = {:center => @truck.map_center, :range => @truck.map_range}
 
     respond_to do |format|
       format.html # show.html.erb

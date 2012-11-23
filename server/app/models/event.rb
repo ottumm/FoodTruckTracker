@@ -94,6 +94,22 @@ class Event < ActiveRecord::Base
 		end
 	end
 
+	def map_image_url
+		params = { 
+			:size => "48x48",
+			:center => "#{latitude},#{longitude}",
+			:zoom => 15,
+			#:key => "AIzaSyCoNyyQ_MuIRqQhMoNl_VP2C32P0EQM4NI",
+			:sensor => "false"
+		}
+
+		"http://maps.googleapis.com/maps/api/staticmap?#{params.to_query}"
+	end
+
+	def self.range_clause center, range
+		{:latitude => mi_to_coord_range(center[:latitude], range), :longitude => mi_to_coord_range(center[:longitude], range)}
+	end
+
 	protected
 
 	def self.dist_clause n
@@ -121,9 +137,5 @@ class Event < ActiveRecord::Base
 
 	def self.mi_to_coord_range center, mi
 		center - (mi * 0.02)..center + (mi * 0.02)
-	end
-
-	def self.range_clause sensor, range
-		{:latitude => mi_to_coord_range(sensor[:latitude], range), :longitude => mi_to_coord_range(sensor[:longitude], range)}
 	end
 end

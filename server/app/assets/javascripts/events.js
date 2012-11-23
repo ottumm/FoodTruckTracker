@@ -4,17 +4,19 @@ function initializeMap() {
 	}
 
 	var myOptions = {
-		zoom: 12,
-		center: new google.maps.LatLng(sensor.latitude, sensor.longitude),
+		zoom: 10,
+		center: new google.maps.LatLng(center.latitude, center.longitude),
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	}
 	var map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
 
-	new google.maps.Marker({
-		position: new google.maps.LatLng(sensor.latitude, sensor.longitude),
-		map: map,
-		title: "Current Location"
-	});
+	if(sensor) {
+		new google.maps.Marker({
+			position: new google.maps.LatLng(sensor.latitude, sensor.longitude),
+			map: map,
+			title: "Current Location"
+		});
+	}
 
 	var infowindow = new google.maps.InfoWindow({maxWidth: 320});
 

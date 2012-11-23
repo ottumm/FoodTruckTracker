@@ -1,5 +1,10 @@
+<div class="map">
+	<div id="map-canvas"></div>
+</div>
+
 <%= javascript_tag do -%>
 	var sensor = <%= sensor.to_json.html_safe %>;
+	var center = <%= center.to_json.html_safe %>;
 	var events = <%= events.to_json(:only => [:latitude, :longitude], :include => :truck).html_safe %>;
 	window.onload = function() { loadGoogleMapsAPI("initializeMap"); }
 <% end -%>

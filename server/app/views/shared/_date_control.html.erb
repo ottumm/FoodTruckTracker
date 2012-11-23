@@ -1,0 +1,9 @@
+<div class="date-control">
+  <% if previous_day_path %>
+    <%= link_to "«", previous_day_path %>
+  <% end %>
+  <%= current_date %>
+  <% if next_day_path %>
+    <%= link_to "»", next_day_path %>
+  <% end %>
+</div>

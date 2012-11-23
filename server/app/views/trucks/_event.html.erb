@@ -1,16 +1,18 @@
+<!--
+ TODO:
+  * Add start_time
+  * Remove avatar and title from each entry
+  * Replace avatar with a little map image?
+  * Elevate location's importance (location above start_time?)
+-->
+
 <div class="event">
   <div class="event-avatar">
-    <%= image_tag event.avatar_url, :alt => "#{event.title} avatar" %>
+    <%= image_tag event.map_image_url %>
   </div>
   <div class="event-inner">
     <div class="event-information">
       <div class="event-name">
-        <%= link_to event.title, event.truck.url %>
-        <% if event.distance %>
-          (<%= event.formatted_distance %>)
-        <% end %>
-      </div>
-      <div class="event-location">
         <%= link_to event.location, event.map_url %> 
       </div>
     </div>

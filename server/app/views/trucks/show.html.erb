@@ -1,2 +1,17 @@
+<!--
+	TODO:
+	* truck icon and description (from twitter) at the top, w/ link to twitter page
+	* latest location at top?
+	* don't show current location on map (?)
+	* scale map such that all locations are visible
+	* combine events with common locations and show a little days of the week view to show when the truck is there
+	* navigation back to home (eat-mobile icon)
+	* use truck name in the url rather than id
+-->
 
-<%= render :partial => "shared/events_with_map" %>
+<div class="events">
+  <%= render(:partial => "trucks/event", :collection => @events) || "No events found." %>
+</div>
+<% if !params[:mobile] %>
+  <%= render :partial => "shared/eventmap", :locals => { :sensor => nil, :center => @center, :events => @events } %>
+<% end %>

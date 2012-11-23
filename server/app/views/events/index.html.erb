@@ -1,1 +1,8 @@
-<%= render :partial => "shared/events_with_map" %>
+<div class="events">
+  <%= render :partial => "shared/date_control", :locals => { :current_date => @current_date, :previous_day_path => @previous_day_path, :next_day_path => @next_day_path } %>
+  <%= render(:partial => "shared/event", :collection => @events) || "No food trucks found." %>
+  <%= render :partial => "shared/range_control", :locals => { :range => @sensor[:range], :decrease_range_path => @decrease_range_path, :increase_range_path => @increase_range_path } %>
+</div>
+<% if !params[:mobile] %>
+  <%= render :partial => "shared/eventmap", :locals => { :sensor => @sensor, :center => @sensor, :events => @events } %>
+<% end %>

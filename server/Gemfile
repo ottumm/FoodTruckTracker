@@ -32,6 +32,7 @@ gem 'twitter'
 gem 'rspec'
 gem 'tzinfo'
 gem 'mysql2'
+#gem 'scheduler_daemon'
 
 group :development do
 	gem 'thin'

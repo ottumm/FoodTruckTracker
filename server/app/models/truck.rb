@@ -5,13 +5,43 @@ class Truck < ActiveRecord::Base
 	has_many :tweets, :through => :postings
 	has_many :events
 
+	attr_accessor :map_center, :map_range
+
 	def current_location
 		event = most_recent_event
 		event.nil? ? "(none)" : event.formatted_address
 	end
 
 	def most_recent_event
-		events.sort {|a,b| b.start_time <=> a.start_time}.first
+		events.order("start_time DESC").limit(1).first
+	end
+
+	def all_locations opts = {}
+		limit = opts[:range_limit] || Float::INFINITY
+		north = south = east = west = nil
+
+		locations = events.all(:select => "count(*) as count, events.*", :group => :formatted_address, :order => "count DESC").select do |coordinate|
+
+			logger.debug "#{coordinate.location} lat: #{coordinate.latitude} lng: #{coordinate.longitude}"
+			if north.nil? || (coordinate.longitude > north.longitude && haversine_distance(coordinate, north) < limit)
+				north = coordinate
+			end
+			if south.nil? || (coordinate.longitude < south.longitude && haversine_distance(coordinate, south) < limit)
+				south = coordinate
+			end
+			if east.nil? || (coordinate.latitude > east.latitude && haversine_distance(coordinate, east) < limit)
+				east = coordinate
+			end
+			if west.nil? || (coordinate.latitude > west.latitude && haversine_distance(coordinate, west) < limit)
+				west = coordinate
+			end
+
+			haversine_distance(coordinate, north) < limit && haversine_distance(coordinate, south) < limit && haversine_distance(coordinate, east) < limit && haversine_distance(coordinate, west) < limit
+		end
+
+		self.map_center = {:latitude => (east.latitude + west.latitude)/2, :longitude => (north.longitude + south.longitude)/2}
+		self.map_range = [haversine_distance(east, west), haversine_distance(north, south)].max
+		locations
 	end
 
 	def url
