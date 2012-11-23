@@ -1,0 +1,3 @@
+#! /bin/sh
+
+ssh ec2-user@eat-mobile.com mysqldump -u root food_truck_production | mysql -u root food_truck_production
