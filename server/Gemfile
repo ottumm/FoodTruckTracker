@@ -34,6 +34,7 @@ gem 'tzinfo'
 gem 'mysql2'
 
 group :development do
+	gem 'thin'
 	gem 'quiet_assets'
 end
 
