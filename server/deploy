@@ -22,7 +22,7 @@ set -e
 
 $SSH "$CD_ROOT && git checkout -- ."
 $SSH "$CD_ROOT && git pull"
-$SSH -t "$CD_SERVER && bundle update"
+$SSH -t "$CD_SERVER && bundle install"
 $SSH "$CD_SERVER && bundle exec rake db:migrate --trace RAILS_ENV=production"
 $SSH "$CD_SERVER && bundle exec rake assets:precompile --trace"
 $SSH -t "$CD_SERVER && sudo mv -f config/httpd.conf /etc/httpd/conf/httpd.conf"
